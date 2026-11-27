@@ -12,6 +12,7 @@ export async function miniVirtualPaymentAvailable() {
 }
 
 type MiniBridge = { navigateTo: (options: { url: string; success: () => void; fail: () => void }) => void;
+  navigateBack?: (options: { delta: number; success: () => void; fail: () => void }) => void;
   getEnv?: (callback: (result: { miniprogram?: boolean }) => void) => void };
 let bridgePromise: Promise<MiniBridge | undefined> | undefined;
 export function miniPaymentBridge(): Promise<MiniBridge | undefined> {
@@ -39,16 +40,32 @@ export async function detectMiniPaymentContext(): Promise<boolean> {
   });
 }
 
-export async function openMiniWallet(currency: "CNY" | "USD" = "CNY", amount?: string | number): Promise<boolean> {
+export async function openMiniWallet(currency: "CNY" | "USD" = "CNY"): Promise<boolean> {
+  try {
+    window.location.assign(`/ai-wallet?currency=${currency === "USD" ? "USD" : "CNY"}&mini=1#wallet-topup`);
+    return true;
+  } catch { return false; }
+}
+
+export async function returnToMiniTopup(): Promise<boolean> {
+  const bridge = await miniPaymentBridge();
+  if (!bridge?.navigateBack) return false;
+  return new Promise(resolve => {
+    const timeout = setTimeout(() => resolve(false), 3500);
+    const finish = (opened: boolean) => { clearTimeout(timeout); resolve(opened); };
+    try { bridge.navigateBack!({delta: 1, success: () => finish(true), fail: () => finish(false)}); }
+    catch { finish(false); }
+  });
+}
+
+export async function openMiniWechatTopup(amount: string | number): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
-  const safeCurrency = currency === "USD" ? "USD" : "CNY";
-  const amountText = amount === undefined ? "" : String(amount).trim();
+  const amountText = String(amount).trim();
   const validAmount = /^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(amountText) &&
     Number(amountText) > 0 && Number(amountText) <= 10000;
-  const url = safeCurrency === "USD"
-    ? "/pages/web/index?usdWallet=1"
-    : "/pages/cny-wallet/index" + (validAmount ? "?amount=" + encodeURIComponent(amountText) : "");
+  if (!validAmount) return false;
+  const url = "/pages/cny-wallet/index?amount=" + encodeURIComponent(amountText);
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
     const finish = (opened: boolean) => { clearTimeout(timeout); resolve(opened); };

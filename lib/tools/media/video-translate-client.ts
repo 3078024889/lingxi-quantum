@@ -4,15 +4,16 @@ import {createFfmpegRuntime} from "@/lib/tools/media/runtime";
 
 export type TimedText={start:number;end:number;text:string};
 
-export function toSrtTimed(segments:TimedText[]){
- const t=(sec:number)=>{
+function formatSubtitleTime(sec:number,decimal:","|"."){
   const ms=Math.max(0,Math.round(sec*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`;
- };
- return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}${decimal}${String(x).padStart(3,"0")}`;
+}
+export function toSrtTimed(segments:TimedText[]){
+ return segments.map((x,i)=>`${i+1}\n${formatSubtitleTime(x.start,",")} --> ${formatSubtitleTime(x.end,",")}\n${x.text}`).join("\n\n");
 }
 export function toVttTimed(segments:TimedText[]){
- return "WEBVTT\n\n"+toSrtTimed(segments).replace(/,/g,".").replace(/^\d+\n/gm,"");
+ const cues=segments.map(x=>`${formatSubtitleTime(x.start,".")} --> ${formatSubtitleTime(x.end,".")}\n${x.text}`);
+ return "WEBVTT\n\n"+cues.join("\n\n");
 }
 
 function copyBytes(data:Uint8Array|string){

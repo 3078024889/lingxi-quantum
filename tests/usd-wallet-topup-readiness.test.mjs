@@ -28,12 +28,12 @@ test("Mini Program CNY uses native merchant JSAPI; USD enters official website P
  const cny=read("app/checkout/page.tsx");
  const usd=read("app/checkout-usd/page.tsx");
  assert.match(wallet,/miniCnyReady/);
- assert.match(wallet,/openMiniWallet\(\"CNY\",amount\)/);
+ assert.match(wallet,/openMiniWechatTopup\(amount\)/);
  assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
  assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
  assert.match(client,/openMiniWallet\(currency: \"CNY\" \| \"USD\"/);
  assert.match(client,/\/pages\/cny-wallet\/index/);
- assert.match(client,/\/pages\/web\/index\?usdWallet=1/);
+ assert.match(client,/\/ai-wallet\?currency=/);
  assert.doesNotMatch(client,/openMiniRecharge|pages\/balance/);
  assert.doesNotMatch(boundary,/openMiniRecharge/);
  assert.match(native,/wx\.requestPayment/);

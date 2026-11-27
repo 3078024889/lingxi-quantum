@@ -22,7 +22,7 @@ test("all mobile and desktop recharge entries invoke the correct Mini Program wa
   assert.match(mobile, /<LingxiMiniIcon name="account" size="nav"\/>/);
   assert.doesNotMatch(mobile, /avatarUrl/);
   assert.match(payment, /\/pages\/cny-wallet\/index/);
-  assert.match(payment, /\/pages\/web\/index\?usdWallet=1/);
+  assert.match(payment, /\/ai-wallet\?currency=/);
   assert.match(read("miniapp/pages/web/index.js"), /\/ai-wallet\?currency=USD/);
   assert.doesNotMatch(payment, /\/pages\/balance\/index/);
   assert.doesNotMatch(nav, /openMiniRecharge/);

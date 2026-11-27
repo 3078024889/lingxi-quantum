@@ -33,7 +33,7 @@ Page({
  onLoad(options){
   enableShareMenu({includeTimeline:true});
   if(options.usdWallet==='1'){
-   this.setData({path:USD_WALLET_PATH,loading:false,usdWallet:true})
+   this.setData({src:withMiniContext(USD_WALLET_PATH),path:USD_WALLET_PATH,loading:true,usdWallet:true})
    return
   }
   const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},

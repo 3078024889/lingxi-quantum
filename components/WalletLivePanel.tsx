@@ -4,7 +4,7 @@ import Link from "next/link";
 import LxText from "@/components/LxText";
 import WalletLedgerPanel from "@/components/WalletLedgerPanel";
 import {BALANCE_TOPUP_AMOUNTS,customTopupAmount,MIN_CUSTOM_TOPUP,MAX_CUSTOM_TOPUP} from "@/lib/balance-topups";
-import {detectMiniPaymentContext,openMiniWallet} from "@/lib/mini/payment-client";
+import {detectMiniPaymentContext,openMiniWechatTopup} from "@/lib/mini/payment-client";
 
 type Currency="CNY"|"USD";
 type Balance={availableMinor:number;refundableMinor:number;refundHoldMinor:number};
@@ -34,6 +34,7 @@ export default function WalletLivePanel(){
  const [miniContext,setMiniContext]=useState(false);
  const [miniCnyReady,setMiniCnyReady]=useState(false);
  const [miniTopupError,setMiniTopupError]=useState("");
+ const [usdWalletCopied,setUsdWalletCopied]=useState(false);
  useEffect(()=>{
   const params = new URLSearchParams(window.location.search);
   if(params.get("currency")==="USD")setTopupCurrency("USD");
@@ -104,7 +105,7 @@ export default function WalletLivePanel(){
  const customHref=topupCurrency==="CNY"?"/checkout?productId=sasi-balance-custom-"+customValueText+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-custom-"+customValueText+"&redirect=%2Fai-wallet%3Fcurrency%3DUSD";
  const openMiniCnyTopup=async(amount:string)=>{
   setMiniTopupError("");
-  const opened=await openMiniWallet("CNY",amount);
+  const opened=await openMiniWechatTopup(amount);
   if(!opened)setMiniTopupError("未能打开小程序人民币充值页，请返回小程序首页后重试。");
  };
  return <div className="lx26-wallet">
@@ -154,7 +155,15 @@ export default function WalletLivePanel(){
      </div>
      <p id="wallet-custom-hint"><LxText zh={"金额范围："+MIN_CUSTOM_TOPUP.toFixed(2)+"–"+MAX_CUSTOM_TOPUP.toLocaleString("en-US")+"，最多两位小数。"} en={"Amount range: 0.01–10,000, up to 2 decimal places."} ja="0.01～10,000、少数第2位まで入力できます。" ko="0.01~10,000, 소수점 둘째 자리까지 입력할 수 있습니다." fr="De 0,01 à 10 000, avec deux décimales maximum." de="0,01 bis 10.000, maximal zwei Nachkommastellen." es="De 0,01 a 10.000, con hasta dos decimales." pt="De 0,01 a 10.000, com até duas casas decimais." ar="من 0.01 إلى 10,000 وبحد أقصى منزلتين عشريتين."/></p>
     </div>
-    <p className="lx26-topup-provider"><LxText zh={topupCurrency==="CNY"?(miniContext?"支付方式：微信小程序原生虚拟支付":"支付方式：微信支付或支付宝"):"支付方式：PayPal"} en={topupCurrency==="CNY"?(miniContext?"Payment method: WeChat Mini Program virtual payment":"Payment methods: WeChat Pay or Alipay"):"Payment method: PayPal"} ja={topupCurrency==="CNY"?"支払い方法：WeChat Pay / Alipay":"支払い方法：PayPal"} ko={topupCurrency==="CNY"?"결제 수단: WeChat Pay 또는 Alipay":"결제 수단: PayPal"} fr={topupCurrency==="CNY"?"Paiement : WeChat Pay ou Alipay":"Paiement : PayPal"} de={topupCurrency==="CNY"?"Zahlung: WeChat Pay oder Alipay":"Zahlung: PayPal"} es={topupCurrency==="CNY"?"Pago: WeChat Pay o Alipay":"Pago: PayPal"} pt={topupCurrency==="CNY"?"Pagamento: WeChat Pay ou Alipay":"Pagamento: PayPal"} ar={topupCurrency==="CNY"?"طريقة الدفع: WeChat Pay أو Alipay":"طريقة الدفع: PayPal"}/></p>
+    <p className="lx26-topup-provider"><LxText zh={topupCurrency==="CNY"?(miniContext?"支付方式：微信支付":"支付方式：微信支付或支付宝"):"支付方式：PayPal"} en={topupCurrency==="CNY"?(miniContext?"Payment method: WeChat Pay":"Payment methods: WeChat Pay or Alipay"):"Payment method: PayPal"} ja={topupCurrency==="CNY"?"支払い方法：WeChat Pay / Alipay":"支払い方法：PayPal"} ko={topupCurrency==="CNY"?"결제 수단: WeChat Pay 또는 Alipay":"결제 수단: PayPal"} fr={topupCurrency==="CNY"?"Paiement : WeChat Pay ou Alipay":"Paiement : PayPal"} de={topupCurrency==="CNY"?"Zahlung: WeChat Pay oder Alipay":"Zahlung: PayPal"} es={topupCurrency==="CNY"?"Pago: WeChat Pay o Alipay":"Pago: PayPal"} pt={topupCurrency==="CNY"?"Pagamento: WeChat Pay ou Alipay":"Pagamento: PayPal"} ar={topupCurrency==="CNY"?"طريقة الدفع: WeChat Pay أو Alipay":"طريقة الدفع: PayPal"}/></p>
+    {miniContext&&topupCurrency==="USD"&&topupPayReady&&<p className="lx26-topup-provider">
+     <LxText zh="微信内打不开 PayPal 时，可以复制官网链接，在手机浏览器继续。" en="If PayPal does not open in WeChat, copy the website link and continue in your phone browser."/>
+     {" "}<button type="button" className="underline" onClick={async()=>{
+      try{await navigator.clipboard.writeText("https://lingxifield.com/ai-wallet?currency=USD#wallet-topup");setUsdWalletCopied(true);}
+      catch{setUsdWalletCopied(false);}
+     }}>{usdWalletCopied?<LxText zh="已复制" en="Copied"/>:<LxText zh="复制官网链接" en="Copy website link"/>}</button>
+     <span className="block select-all break-all">https://lingxifield.com/ai-wallet?currency=USD#wallet-topup</span>
+    </p>}
     {miniTopupError&&<p role="alert" className="lx26-topup-unavailable">{miniTopupError}</p>}
     {!topupPayReady&&<p role="status" className="lx26-topup-unavailable"><LxText zh={topupCurrency==="CNY"?(miniContext?"小程序人民币充值暂未开放，请稍后再试。":"人民币支付暂不可用，请稍后再试。"):"美元 PayPal 充值暂不可用，请稍后再试。"} en={topupCurrency==="CNY"?"CNY payment is temporarily unavailable.":"USD PayPal top-ups are temporarily unavailable."} ja={topupCurrency==="CNY"?"人民元決済は一時的に利用できません。":"USDのPayPalチャージは一時的に利用できません。"} ko={topupCurrency==="CNY"?"CNY 결제를 일시적으로 사용할 수 없습니다.":"USD PayPal 충전을 일시적으로 사용할 수 없습니다."} fr={topupCurrency==="CNY"?"Le paiement CNY est temporairement indisponible.":"Les recharges USD via PayPal sont temporairement indisponibles."} de={topupCurrency==="CNY"?"CNY-Zahlung ist vorübergehend nicht verfügbar.":"USD-Aufladungen über PayPal sind vorübergehend nicht verfügbar."} es={topupCurrency==="CNY"?"El pago en CNY no está disponible temporalmente.":"Las recargas USD con PayPal no están disponibles temporalmente."} pt={topupCurrency==="CNY"?"O pagamento em CNY está temporariamente indisponível.":"As recargas USD via PayPal estão temporariamente indisponíveis."} ar={topupCurrency==="CNY"?"الدفع بعملة CNY غير متاح مؤقتًا.":"شحن USD عبر PayPal غير متاح مؤقتًا."}/></p>}
    </div>

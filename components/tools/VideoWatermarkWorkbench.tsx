@@ -1,7 +1,8 @@
 "use client";
-import {useEffect,useMemo,useRef,useState} from "react";
+import {useEffect,useMemo,useRef,useState,type PointerEvent} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import PaidActionButton from "@/components/tools/PaidActionButton";
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -10,6 +11,7 @@ import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from 
 
 type MediaItem={file:File;duration:number;width:number;height:number;key:string};
 type Box={x:number;y:number;w:number;h:number};
+type Drag={id:number;x:number;y:number;box:Box;mode:"draw"|"move"|"size"};
 type Output={name:string;url:string;blob:Blob};
 type Failure={name:string;reason:string};
 type FfmpegHandle={terminate:()=>void};
@@ -28,8 +30,39 @@ const D:Record<LingxiLang,C>={
 function mediaMetaOf(file:File,msg:string,formatMsg:string){return new Promise<{duration:number;width:number;height:number}>((resolve,reject)=>{const el=document.createElement("video"),u=URL.createObjectURL(file),cleanup=()=>{clearTimeout(timer);URL.revokeObjectURL(u);el.removeAttribute("src");el.load()},timer=setTimeout(()=>{cleanup();reject(new Error(msg))},15000);el.preload="metadata";el.onloadedmetadata=()=>{const duration=el.duration,width=el.videoWidth,height=el.videoHeight;cleanup();Number.isFinite(duration)&&duration>0&&width>0&&height>0?resolve({duration,width,height}):reject(new Error(msg))};el.onerror=()=>{cleanup();reject(new Error(formatMsg))};el.src=u})}
 export default function VideoWatermarkWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
+ const freeAcceptance=isFreeLocalAcceptanceTool("video-watermark-remover");
  const[items,setItems]=useState<MediaItem[]>([]),[preview,setPreview]=useState(""),[box,setBox]=useState<Box>({x:72,y:78,w:24,h:14}),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[results,setResults]=useState<Output[]>([]),[failures,setFailures]=useState<Failure[]>([]),[error,setError]=useState(""),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  const ff=useRef<FfmpegHandle|null>(null),resultUrls=useRef<string[]>([]),cancelled=useRef(false);
+ const drag=useRef<Drag|null>(null);
+ const previewVideo=useRef<HTMLVideoElement|null>(null);
+ function pointerPosition(event:PointerEvent<HTMLDivElement>){
+   const rect=event.currentTarget.getBoundingClientRect();
+   return {
+     x:Math.max(0,Math.min(100,(event.clientX-rect.left)*100/rect.width)),
+     y:Math.max(0,Math.min(100,(event.clientY-rect.top)*100/rect.height)),
+   };
+ }
+ function beginSelection(event:PointerEvent<HTMLDivElement>){
+   if(busy||drag.current||event.button!==0)return;
+   const point=pointerPosition(event);
+   const handle=(event.target as HTMLElement).dataset.watermarkHandle;
+   const mode=handle==="size"?"size":handle==="move"?"move":"draw";
+   drag.current={id:event.pointerId,...point,box,mode};
+   event.currentTarget.setPointerCapture(event.pointerId);
+ }
+ function updateSelection(event:PointerEvent<HTMLDivElement>){
+   const start=drag.current;
+   if(!start||start.id!==event.pointerId)return;
+   const {x,y}=pointerPosition(event);
+   const movedX=x-start.x,movedY=y-start.y;
+   if(start.mode==="move"){
+     setBox({...start.box,x:Math.max(0,Math.min(100-start.box.w,start.box.x+movedX)),y:Math.max(0,Math.min(100-start.box.h,start.box.y+movedY))});
+   }else if(start.mode==="size"){
+     setBox({...start.box,w:Math.min(100-start.box.x,Math.max(2,start.box.w+movedX)),h:Math.min(100-start.box.y,Math.max(2,start.box.h+movedY))});
+   }else if(Math.abs(movedX)>=2&&Math.abs(movedY)>=2){
+     setBox({x:Math.min(start.x,x),y:Math.min(start.y,y),w:Math.abs(movedX),h:Math.abs(movedY)});
+   }
+ }
  useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview);for(const u of resultUrls.current)URL.revokeObjectURL(u);try{ff.current?.terminate()}catch{}},[preview]);
  function clearResults(){for(const u of resultUrls.current)URL.revokeObjectURL(u);resultUrls.current=[];setResults([]);setFailures([])}
  async function hydrate(files:File[]){setError("");const next:MediaItem[]=[];for(const file of files.slice(0,10)){try{const m=await mediaMetaOf(file,c.metaFail,c.formatFail);next.push({file,duration:m.duration,width:m.width,height:m.height,key:`${file.name}-${file.size}-${file.lastModified}`})}catch(e){setError(e instanceof Error?e.message:String(e))}}setItems(next);clearResults();if(preview)URL.revokeObjectURL(preview);setPreview(next[0]?URL.createObjectURL(next[0].file):"")}
@@ -45,8 +78,8 @@ export default function VideoWatermarkWorkbench(){
    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
    const ext=item.file.name.split(".").pop()||"mp4",input=`input-${index}.${ext}`,output=`output-${index}.mp4`;await f.writeFile(input,await fetchFile(item.file));
    const w=item.width,h=item.height;
-   const px=Math.max(0,Math.min(w-9,Math.round(w*box.x/100))),py=Math.max(0,Math.min(h-9,Math.round(h*box.y/100)));
-   const pw=Math.min(w-px,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py,Math.max(8,Math.round(h*box.h/100)));
+   const px=Math.max(2,Math.min(w-10,Math.round(w*box.x/100))),py=Math.max(2,Math.min(h-10,Math.round(h*box.y/100)));
+   const pw=Math.min(w-px-2,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py-2,Math.max(8,Math.round(h*box.h/100)));
    if(pw<8||ph<8)throw new Error("WATERMARK_REGION_INVALID");
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
@@ -68,9 +101,34 @@ export default function VideoWatermarkWorkbench(){
   <FileDropzone accept="video/*,.mp4,.mov,.m4v,.webm,.mkv" multiple maxFiles={10} maxSizeMB={500} files={items.map(x=>x.file)} onChange={hydrate} disabled={busy} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy}/>
   <p className="text-xs leading-5 text-[var(--lx-muted)]">{c.rights}</p>
-  {preview&&<div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl bg-black"><video src={preview} controls className="w-full"/><div className="pointer-events-none absolute border-2 border-white/70 bg-white/10" style={{left:`${box.x}%`,top:`${box.y}%`,width:`${box.w}%`,height:`${box.h}%`}}/></div>}
-  {items.length>0&&<><div className="grid gap-3 sm:grid-cols-4">{([[c.x,"x"],[c.y,"y"],[c.w,"w"],[c.h,"h"]] as const).map(([name,key])=><label key={key} className="text-sm text-[var(--lx-muted)]">{name} %<input type="range" min={0} max={key==="w"||key==="h"?50:95} value={box[key]} onChange={e=>setBox(v=>({...v,[key]:Number(e.target.value)}))} className="mt-2 w-full"/><span className="text-xs text-[var(--lx-faint)]">{box[key]}%</span></label>)}</div><div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm text-[var(--lx-muted)]">{items.length} · {c.billing}: <b className="text-[var(--lx-ink)]">{units}</b></div></>}
-  <div className="flex flex-wrap gap-3">{busy?<><button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button><button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button></>:null}{units>0&&draftReady?<PaidActionButton toolId="video-watermark-remover" quantity={units} draftId={draftId} draftReady={draftReady} metadata={{minutes:units,files:items.length,box}} onPaid={async()=>{await run()}} label={c.price}/>:null}</div>
+  {preview&&<>
+    <p className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"用手指或鼠标框住水印。拖动框内移动，拖动右下角改大小。":"Drag to mark the watermark. Drag inside the box to move it or pull the bottom corner to resize."}</p>
+    <div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl bg-black">
+      <video ref={previewVideo} src={preview} muted playsInline className="block w-full"/>
+      <div
+        data-testid="video-watermark-selection"
+        className="absolute inset-0 touch-none cursor-crosshair"
+        onPointerDown={beginSelection}
+        onPointerMove={updateSelection}
+        onPointerUp={event=>{updateSelection(event);drag.current=null}}
+        onLostPointerCapture={()=>{drag.current=null}}
+      >
+        <div data-watermark-handle="move" className="absolute cursor-move border-2 border-white bg-white/10" style={{left:`${box.x}%`,top:`${box.y}%`,width:`${box.w}%`,height:`${box.h}%`}}>
+          <span data-watermark-handle="size" className="absolute bottom-0 right-0 grid size-11 cursor-nwse-resize place-items-end p-1">
+            <span className="pointer-events-none size-3 rounded-sm bg-white shadow"/>
+          </span>
+        </div>
+      </div>
+    </div>
+    <button type="button" onClick={()=>{const video=previewVideo.current;if(video?.paused)void video.play().catch(()=>{});else video?.pause()}} className="rounded-xl border px-4 py-2 text-sm">{lang==="zh"?"播放或暂停预览":"Play or pause preview"}</button>
+  </>}
+  {items.length>0&&<details><summary className="cursor-pointer text-sm">{lang==="zh"?"精确调整区域":"Fine-tune selection"}</summary><div className="mt-2 grid gap-3 sm:grid-cols-4">{([[c.x,"x"],[c.y,"y"],[c.w,"w"],[c.h,"h"]] as const).map(([name,key])=>{const isSize=key==="w"||key==="h";const max=Math.floor(100-({x:box.w,y:box.h,w:box.x,h:box.y}[key]));return <label key={key} className="text-sm text-[var(--lx-muted)]">{name} %<input type="range" min={isSize?2:0} max={max} value={Math.round(box[key])} disabled={busy} onChange={e=>setBox(value=>({...value,[key]:Number(e.target.value)}))} className="mt-2 w-full"/></label>})}</div></details>}
+  <div className="flex flex-wrap gap-3">
+    {busy?<button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button>:null}
+    {units>0&&draftReady&&(freeAcceptance
+      ?<button type="button" disabled={busy} onClick={()=>void run().catch(()=>{})} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-50">{lang==="zh"?"清理选中区域":"Clean selected area"}</button>
+      :<PaidActionButton toolId="video-watermark-remover" quantity={units} draftId={draftId} draftReady={!busy&&draftReady} metadata={{minutes:units,files:items.length,box}} onPaid={run} label={c.price}/>)}
+  </div>
   {progress&&<p className="text-sm text-[var(--lx-muted)]">{progress}</p>}
   {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><p className="my-3 break-all text-sm text-[var(--lx-muted)]">{r.name}</p><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`} saveLabel={c.download}/></div>)}</div>}
   {failures.length>0&&<div className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-3 text-xs text-[var(--lx-danger)]">{failures.map(x=><div key={x.name}>{x.name} · {x.reason}</div>)}</div>}

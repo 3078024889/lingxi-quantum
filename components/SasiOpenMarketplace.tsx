@@ -293,6 +293,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main} data-release-design="20261114-afternoon-three-pages"><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
   {!sellerOnly&&<>
+  <div className={styles.marketBanner}>
   <section className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="global-scene-20261114.webp" aria-labelledby="sasi-market-title" aria-label={sasiSoftwareUiText(lang,"灵犀场 SASI 智能软件市场","LINGXIFIELD SASI intelligent software marketplace")}>
     <img src="/images/global-scene-20261114.webp" className={styles.heroArtwork} alt="" width={2172} height={724} loading="eager" fetchPriority="high" decoding="async"/>
     <div className={styles.heroCopy}>
@@ -302,6 +303,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      <div className={styles.heroActions}><a href="#products">{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</a><Link href="/sasi/seller">＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</Link></div>
     </div>
   </section>
+  </div>
   <div className={styles.marketFeatures} aria-label={sasiSoftwareUiText(lang,"软件市场服务能力","Marketplace capabilities")}>
    {MARKET_FEATURES.map((item,index)=><div className={styles.marketFeature} key={item.zh}>
     <span className={styles.marketFeatureIcon}><AfternoonArtworkIcon kind={(["layers","chart","shield","people","tools"] as AfternoonIconKind[])[index]}/></span>
@@ -506,7 +508,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    <div className={styles.payoutForm}><select value={requestCurrency} onChange={e=>setRequestCurrency(e.target.value as "CNY"|"USD")}><option value="CNY">CNY</option><option value="USD">USD</option></select>
     <input type="number" min="0.01" step="0.01" placeholder={sasiSoftwareUiText(lang,"提现金额","Withdrawal amount")} value={requestedAmount} onChange={e=>setRequestedAmount(e.target.value)}/>
     <button disabled={busy!==""||!payments?.payoutsOpen||!seller||seller.kyc_status!=="verified"} onClick={()=>void payout()}>{sasiSoftwareUiText(lang,"申请提现","Request payout")}</button></div>
-   <p className={styles.note}>{payments?.payoutsOpen?(sasiSoftwareUiText(lang,"平台将在受理后核对付款状态并提交支付机构；不代表已到账。","Payout requests are checked and submitted to the provider; submission does not confirm arrival.")):(sasiSoftwareUiText(lang,"自动转账渠道正在接入和验收，暂不开放提现申请。","Automated provider payouts are in integration testing and are not open."))}</p>
+   <p className={styles.note}>{payments?.payoutsOpen?(sasiSoftwareUiText(lang,"平台将在受理后核对付款状态并提交支付机构；不代表已到账。","Payout requests are checked and submitted to the provider; submission does not confirm arrival.")):(sasiSoftwareUiText(lang,"提现服务暂未开放，请稍后查看。","Withdrawals are currently unavailable."))}</p>
   </section>}
  </div></main>
 }

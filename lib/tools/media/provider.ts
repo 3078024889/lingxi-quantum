@@ -27,11 +27,10 @@ async function checked(r:Response){
 export async function translateTextRemote(input:{text:string;source:string;target:string}){
  const c=mediaProviderConfig();if(!c)throw new Error("MEDIA_PROVIDER_NOT_CONFIGURED");
  const r=await checked(await fetch(`${c.baseUrl}/chat/completions`,{
-  method:"POST",
+  method:"POST",signal:AbortSignal.timeout(50000),
   headers:{authorization:`Bearer ${c.key}`,"content-type":"application/json"},
   body:JSON.stringify({
    model:c.translateModel,
-   temperature:0.1,
    messages:[
     {role:"system",content:"Translate faithfully. Return only the translated text. Preserve line breaks, numbers, names, and subtitle punctuation. Do not add commentary."},
     {role:"user",content:`Source language: ${input.source}\nTarget language: ${input.target}\n\n${input.text}`}
@@ -47,7 +46,7 @@ export async function translateTextRemote(input:{text:string;source:string;targe
 export async function transcribeAudioRemote(file:File){
  const c=mediaProviderConfig();if(!c)throw new Error("MEDIA_PROVIDER_NOT_CONFIGURED");
  const fd=new FormData();fd.set("model",c.transcribeModel);fd.set("file",file,file.name||"audio.mp3");fd.set("response_format","json");
- const r=await checked(await fetch(`${c.baseUrl}/audio/transcriptions`,{method:"POST",headers:{authorization:`Bearer ${c.key}`},body:fd}));
+ const r=await checked(await fetch(`${c.baseUrl}/audio/transcriptions`,{method:"POST",signal:AbortSignal.timeout(50000),headers:{authorization:`Bearer ${c.key}`},body:fd}));
  const d:any=await r.json();
  const text=String(d?.text||"").trim();
  if(!text)throw new Error("MEDIA_TRANSCRIPT_EMPTY");
@@ -57,7 +56,7 @@ export async function transcribeAudioRemote(file:File){
 export async function synthesizeRemote(text:string,language:string){
  const c=mediaProviderConfig();if(!c)throw new Error("MEDIA_PROVIDER_NOT_CONFIGURED");
  const r=await checked(await fetch(`${c.baseUrl}/audio/speech`,{
-  method:"POST",
+  method:"POST",signal:AbortSignal.timeout(50000),
   headers:{authorization:`Bearer ${c.key}`,"content-type":"application/json"},
   body:JSON.stringify({
    model:c.ttsModel,voice:c.voice,input:text.slice(0,12000),response_format:"mp3",

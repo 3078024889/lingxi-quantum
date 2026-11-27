@@ -25,7 +25,6 @@ function paymentError(error) {
 
 Page({
   data: {
-    amounts: [10, 88, 666, 888],
     selected: '10',
     custom: '',
     amountText: '10.00',
@@ -35,24 +34,34 @@ Page({
     accountLoaded: false,
     linked: false,
     accountLabel: '',
-    balanceText: '0.00',
-    refundableText: '0.00',
     orderId: '',
     requestId: '',
     canResumePayment: false,
-    topups: [],
     message: '正在检查人民币充值服务…',
   },
 
   onLoad(options = {}) {
     this.restorePending()
     const amount = String(options.amount || '')
-    if (amount) this.applyAmount(amount)
-    void this.refreshAll()
+    if (!this.data.orderId && !this.data.requestId) {
+      if (!parseAmount(amount)) {
+        this.openWebsiteWallet('CNY')
+        return
+      }
+      this.applyAmount(amount)
+    }
+    void this.refreshAll().then(() => {
+      if (!this.data.orderId && !this.data.requestId && this.data.enabled &&
+          this.data.accountLoaded && !this.data.linked) void this.connectAccount()
+    })
   },
 
   onShow() {
     if (this.data.orderId && !this.data.busy) void this.confirmPayment()
+    if (this.accountLinkPending) {
+      this.accountLinkPending = false
+      void this.refreshAccount()
+    }
   },
 
   restorePending() {
@@ -90,12 +99,12 @@ Page({
         TOPUPS_DISABLED: '小程序人民币商户支付尚未开放。',
         PRODUCTION_ENV_REQUIRED: '当前环境未开放真实人民币支付。',
         APP_ID_MISMATCH: '小程序 AppID 与微信支付商户绑定配置不一致，已阻止下单。',
-        PROVIDER_CONFIG_MISSING: '微信商户 JSAPI 配置不完整，暂不能发起充值。',
+        PROVIDER_CONFIG_MISSING: '微信支付暂时无法连接，请稍后重试。',
       }
       this.setData({
         enabled: result.enabled === true,
         message: result.enabled === true
-          ? '微信商户支付已就绪。使用小程序原生支付，到账以服务端回调和查单为准。'
+          ? '微信支付已开放，付款后会自动核对到账情况。'
           : (disabledMessages[result.reason] || '小程序人民币商户支付暂未开放，请稍后重新检查。'),
       })
     } catch (_) {
@@ -105,52 +114,40 @@ Page({
 
   async refreshAccount() {
     try {
-      const result = await request('/api/wechat/mini/account-summary')
+      const result = await request('/api/wechat/mini/account-summary?view=identity')
       this.setData({
         accountLoaded: true,
         linked: result.linked === true,
         accountLabel: result.accountLabel || '',
-        balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
-        refundableText: (Number(result.refundableFen || 0) / 100).toFixed(2),
-        topups: (result.topups || []).slice(0, 4).map(row => ({
-          id: row.id,
-          amountText: Number(row.amount_rmb).toFixed(2),
-          statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '核验中' : row.status === 'refunded' ? '已退款' : '已关闭',
-        })),
       })
       return result
     } catch (_) {
-      this.setData({ accountLoaded: false, linked: false, accountLabel: '', message: '账户余额暂未加载，请重新加载账户信息。' })
+      this.setData({ accountLoaded: false, linked: false, accountLabel: '', message: '暂时无法确认到账账户，请重新读取账户后再付款。' })
       return null
     }
   },
 
   async connectAccount() {
-    if (this.data.busy) return
+    if (this.data.busy || this.accountLinkPending) return
+    this.accountLinkPending = true
     try {
-      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
-      wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent(result.path) })
-    } catch (_) {
-      this.setData({ message: '账户连接暂未完成，请重试。' })
+      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST', data: {} })
+      if (typeof result.path !== 'string' || !result.path.startsWith('/account?miniLink=')) {
+        throw new Error('Account connection link unavailable')
+      }
+      await new Promise((resolve, reject) => wx.navigateTo({
+        url: '/pages/web/index?path=' + encodeURIComponent(result.path),
+        success: resolve,
+        fail: reject,
+      }))
+    } catch (error) {
+      this.accountLinkPending = false
+      const status = error?.statusCode
+      const message = status === 401 ? '微信登录已失效。请退出小程序后重新进入，再连接官网账户。'
+        : status >= 500 ? '官网账户连接服务暂时不可用，请稍后重试。'
+        : '未能打开官网账户连接页面，请检查网络后重试。'
+      this.setData({ message })
     }
-  },
-
-  choose(event) {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    const value = String(event.currentTarget.dataset.amount || '')
-    this.setData({ selected: value, custom: '', amountText: Number(value).toFixed(2) })
-  },
-
-  chooseCustom() {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    this.setData({ selected: 'custom', custom: '', amountText: '' })
-  },
-
-  input(event) {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    const custom = String(event.detail.value || '')
-    const parsed = parseAmount(custom)
-    this.setData({ custom, amountText: parsed ? parsed.text : '' })
   },
 
   currentAmount() {
@@ -193,7 +190,7 @@ Page({
       }
       this.setData({
         canResumePayment: false,
-        message: '付款结果仍在核验。若已扣款，余额会在服务端确认后入账；请勿重复付款。',
+        message: '付款结果仍在核验。若已扣款，订单确认后余额会自动到账；请勿重复付款。',
       })
       return { paid: false }
     } catch (_) {
@@ -246,7 +243,7 @@ Page({
         success: resolve,
         fail: reject,
       }))
-      this.setData({ message: '微信收银台已返回，正在向服务端核验订单与余额。' })
+      this.setData({ message: '微信收银台已返回，正在核对订单和余额。' })
     } catch (error) {
       this.setData({ message: paymentError(error) })
     } finally {
@@ -315,14 +312,11 @@ Page({
     } finally { this.setData({ busy: false }) }
   },
 
-  openUsdWallet() {
+  openWebsiteWallet(currency) {
     wx.redirectTo({
-      url: '/pages/web/index?usdWallet=1',
+      url: '/pages/web/index?path=' + encodeURIComponent('/ai-wallet?currency=' + (currency === 'USD' ? 'USD' : 'CNY') + '#wallet-topup'),
       fail() { wx.showToast({ title: '暂时无法打开官网充值入口', icon: 'none' }) },
     })
   },
-  openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
-  openRefunds() { wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/refunds#mini') }) },
-  openAccount() { wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/account') }) },
   back() { wx.navigateBack() },
 })

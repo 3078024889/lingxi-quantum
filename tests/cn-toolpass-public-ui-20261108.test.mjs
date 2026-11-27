@@ -29,7 +29,8 @@ test("plan choice always leads to an explicit payment choice and preserved conse
  assert.match(page,/credentials:"same-origin"/);
  assert.match(page,/productId:selected\.sku/);
  assert.match(page,/requestId:id/);
- assert.match(api,/TOOL_PASS_COMMERCE_READY/);
+ assert.match(api,/if\(!toolPassCommerceReady\(\)\)/);
+ assert.match(read("lib/tools/commerce/tool-server-receipt.ts"),/TOOL_PASS_COMMERCE_READY/);
  assert.match(api,/isSameOriginMutation/);
  assert.match(provider,/wechat,alipay,paypal/);
  const checkout=read("app/checkout/page.tsx");

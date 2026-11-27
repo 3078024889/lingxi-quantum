@@ -56,7 +56,7 @@ export async function exchangeCodeForOpenid(code: string): Promise<{ openid: str
   const url =
     `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${APP_ID}` +
     `&secret=${APP_SECRET}&code=${encodeURIComponent(code)}&grant_type=authorization_code`;
-  const res = await fetch(url);
+  const res = await fetch(url,{cache:"no-store",signal:AbortSignal.timeout(20000)});
   const data = await res.json();
   if (data.errcode) {
     // 40029 = code无效/已过期或被用过一次； 48001 = 网页授权域名没配置。

@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useRef,useState} from "react";
+import {useMemo,useRef,useState,type PointerEvent} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -10,7 +10,7 @@ type Orientation="auto"|"portrait"|"landscape";
 type Margin="none"|"small"|"big";
 type C={lead:string;run:string;busy:string;ready:string;error:string;pageSize:string;orientation:string;margin:string;fit:string;a4:string;letter:string;auto:string;portrait:string;landscape:string;none:string;small:string;big:string;up:string;down:string;remove:string};
 const D:Record<LingxiLang,C>={
- zh:{lead:"多张图片一次转 PDF，用上移、下移调整顺序，选择页面尺寸和边距。",run:"生成 PDF",busy:"正在生成…",ready:"PDF 已生成，可以核对页数后下载。",error:"图片转 PDF 没有完成",pageSize:"页面大小",orientation:"方向",margin:"边距",fit:"按图片原尺寸",a4:"A4",letter:"US Letter",auto:"自动",portrait:"竖向",landscape:"横向",none:"无",small:"小",big:"大",up:"上移",down:"下移",remove:"移除"},
+ zh:{lead:"多张图片合成一个 PDF。拖动手柄调整页面顺序。",run:"生成 PDF",busy:"正在生成…",ready:"PDF 已生成，可以核对页数后下载。",error:"图片转 PDF 没有完成",pageSize:"页面大小",orientation:"方向",margin:"边距",fit:"按图片原尺寸",a4:"A4",letter:"US Letter",auto:"自动",portrait:"竖向",landscape:"横向",none:"无",small:"小",big:"大",up:"上移",down:"下移",remove:"移除"},
  en:{lead:"Turn multiple images into one PDF, reorder them, and choose page size, orientation, and margins.",run:"Create PDF",busy:"Creating…",ready:"The PDF is ready. Review the page count before downloading.",error:"Image-to-PDF did not finish",pageSize:"Page size",orientation:"Orientation",margin:"Margin",fit:"Fit image size",a4:"A4",letter:"US Letter",auto:"Auto",portrait:"Portrait",landscape:"Landscape",none:"None",small:"Small",big:"Large",up:"Up",down:"Down",remove:"Remove"},
  ja:{lead:"複数の画像を1つのPDFにまとめ、順序・用紙サイズ・向き・余白を調整できます。",run:"PDFを生成",busy:"生成中…",ready:"PDFを生成しました。ページ数を確認して保存できます。",error:"PDFを生成できませんでした",pageSize:"用紙サイズ",orientation:"向き",margin:"余白",fit:"画像サイズ",a4:"A4",letter:"US Letter",auto:"自動",portrait:"縦",landscape:"横",none:"なし",small:"小",big:"大",up:"上へ",down:"下へ",remove:"削除"},
  ko:{lead:"여러 이미지를 하나의 PDF로 만들고 순서, 용지 크기, 방향과 여백을 조정할 수 있습니다.",run:"PDF 생성",busy:"생성 중…",ready:"PDF가 준비되었습니다. 페이지 수를 확인한 후 저장하세요.",error:"이미지 PDF 변환을 완료하지 못했습니다",pageSize:"페이지 크기",orientation:"방향",margin:"여백",fit:"이미지 크기",a4:"A4",letter:"US Letter",auto:"자동",portrait:"세로",landscape:"가로",none:"없음",small:"작게",big:"크게",up:"위로",down:"아래로",remove:"삭제"},
@@ -33,6 +33,29 @@ export default function ImageToPdfWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
  const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small"),[dragOver,setDragOver]=useState<number|null>(null);const dragSource=useRef<number|null>(null);
+ const listRef=useRef<HTMLDivElement>(null);
+ const orderTouch=useRef<{pointer:number;from:number}|null>(null);
+ function targetPage(event:PointerEvent<HTMLButtonElement>){
+  const item=document.elementFromPoint(event.clientX,event.clientY)?.closest<HTMLElement>("[data-pdf-sort-index]");
+  return item&&listRef.current?.contains(item)?Number(item.dataset.pdfSortIndex):null;
+ }
+ function startTouchOrder(event:PointerEvent<HTMLButtonElement>,index:number){
+  if(busy||event.pointerType==="mouse"||!event.isPrimary)return;
+  orderTouch.current={pointer:event.pointerId,from:index};
+  event.currentTarget.setPointerCapture(event.pointerId);
+  setDragOver(index);
+ }
+ function moveTouchOrder(event:PointerEvent<HTMLButtonElement>){
+  if(orderTouch.current?.pointer===event.pointerId)setDragOver(targetPage(event));
+ }
+ function finishTouchOrder(event:PointerEvent<HTMLButtonElement>){
+  const start=orderTouch.current;
+  if(start?.pointer!==event.pointerId)return;
+  const target=targetPage(event);
+  orderTouch.current=null;
+  setDragOver(null);
+  if(target!==null)reorder(start.from,target);
+ }
  function invalidate(){setResult([]);setError("")}
  function reorder(index:number,target:number){
   if(index<0||target<0||index>=files.length||target>=files.length||index===target)return;
@@ -65,13 +88,20 @@ export default function ImageToPdfWorkbench(){
  return <div className="space-y-4">
   <FileDropzone accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple maxFiles={100} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
-  {files.length>0&&<div className="space-y-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm">
-   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} data-testid="image-to-pdf-sort-item" draggable={!busy}
+  {files.length>0&&<div ref={listRef} className="space-y-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm">
+   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} data-testid="image-to-pdf-sort-item" data-pdf-sort-index={i} draggable={!busy}
    onDragStart={e=>{dragSource.current=i;e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(i))}}
    onDragOver={e=>{if(dragSource.current===null)return;e.preventDefault();e.dataTransfer.dropEffect="move";if(dragOver!==i)setDragOver(i)}}
    onDrop={e=>{if(dragSource.current===null)return;e.preventDefault();reorder(dragSource.current,i);dragSource.current=null;setDragOver(null)}}
    onDragEnd={()=>{dragSource.current=null;setDragOver(null)}}
-   className={`flex flex-wrap items-center gap-2 rounded-lg px-2 py-2 sm:flex-nowrap sm:cursor-move ${dragOver===i?"outline outline-2 outline-[var(--lx-line-strong)]":""}`}><span className="min-w-0 basis-full truncate sm:flex-1 sm:basis-auto">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.down}</button><button type="button" disabled={busy} onClick={()=>{invalidate();setFiles(current=>current.filter((_,j)=>j!==i))}} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.remove}</button></div>)}
+   className={`flex flex-wrap items-center gap-2 rounded-lg px-2 py-2 sm:flex-nowrap sm:cursor-move ${dragOver===i?"outline outline-2 outline-[var(--lx-line-strong)]":""}`}><span className="min-w-0 basis-full truncate sm:flex-1 sm:basis-auto">{i+1}. {f.name}</span>
+    <button type="button" disabled={busy||files.length<2} data-testid="image-to-pdf-touch-grip"
+     aria-label={(lang==="zh"?"拖动调整页序":"Drag to reorder")+": "+f.name}
+     onPointerDown={e=>startTouchOrder(e,i)} onPointerMove={moveTouchOrder} onPointerUp={finishTouchOrder}
+     onLostPointerCapture={()=>{orderTouch.current=null;setDragOver(null)}}
+     onKeyDown={e=>{if(e.key!=="ArrowUp"&&e.key!=="ArrowDown")return;e.preventDefault();move(i,e.key==="ArrowUp"?-1:1)}}
+     className="min-h-[44px] min-w-[44px] cursor-grab touch-none rounded-lg border text-xl disabled:opacity-40">⠿</button>
+    <button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.down}</button><button type="button" disabled={busy} onClick={()=>{invalidate();setFiles(current=>current.filter((_,j)=>j!==i))}} className="min-h-[44px] rounded-lg border px-3 py-2 text-sm">{c.remove}</button></div>)}
   </div>}
   {files.length>0&&<div className="grid gap-3 sm:grid-cols-3">
    <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>{setPageSize(e.target.value as PageSize);invalidate()}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>

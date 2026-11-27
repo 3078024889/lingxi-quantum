@@ -53,19 +53,23 @@ export default function BurnAfterReadWorkbench(){
    if(textTask.current?.signature===signature){await deliverText(textTask.current);return}
    setBusy(true);setError('');
    try{
-    const ticket=await claimToolStart('burn-after-read',1);
+    const accessRequestId=process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"
+      ?undefined
+      :(await claimToolStart('burn-after-read',1)).requestId;
     const enc=await encryptedText();
     const task:TextTask={key:enc.key,body:{ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==='limited'?views:1,viewDurationSeconds:mode==='fast'?duration:null}};
-    const pending:PendingTextTask={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'}),accessRequestId:ticket.requestId};textTask.current=pending;
+    const pending:PendingTextTask={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'}),accessRequestId};textTask.current=pending;
     await deliverText(pending);
    }catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):deliveryText(lang,'failed'))}finally{setBusy(false)}
  }
  async function deliverText(pending:PendingTextTask){
    setBusy(true);setError('');setLink('');setRecoverText(pending);
    try{
-    await ensureBurnNoteAccess(pending.blob,pending.id);
+    if(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE!=="true")await ensureBurnNoteAccess(pending.blob,pending.id);
     const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...pending.task.body,exportRequestId:pending.id,accessRequestId:pending.accessRequestId})});
-    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
+    const d=await r.json().catch(()=>({}));
+    if(r.status===401){setError(deliveryText(lang,"login"));return}
+    if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
     if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
     setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${pending.task.key}&t=${encodeURIComponent(String(d.token))}`);setText('');textTask.current=null;setRecoverText(null);await deletePaidTaskDraft(pending.id);
    }catch{setError(lang==="zh"?"暂时无法生成，请稍后再试。":"Unable to create the link right now.")}

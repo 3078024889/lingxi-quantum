@@ -143,7 +143,11 @@ export async function POST(req:Request){
   });
   if(reserveError)throw new Error("MINI_JSAPI_ATOMIC_RESERVATION_FAILED");
   const reserved=Array.isArray(reservation)?reservation[0]:reservation;
-  if(!reserved?.ok)return conflict("已有人民币充值订单尚未结束，请先核验原订单。");
+  // The reservation is serialized per account and returns the blocking order.
+  // Preserve that identifier so a fresh device can recover it instead of looping
+  // forever with a request ID that never owned the existing reservation.
+  if(!reserved?.ok)return conflict("还有一笔充值待确认，请继续查看原订单。",
+   typeof reserved?.orderId==="string"?reserved.orderId:undefined);
 
   let prepayId="";
   try{

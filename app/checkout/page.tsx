@@ -1,5 +1,6 @@
 "use client";
 import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
+import {detectMiniPaymentContext,openMiniWechatTopup} from "@/lib/mini/payment-client";
 
 import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -359,10 +360,15 @@ const orderIdRef = useRef<string | null>(null);
   // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
   // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
-    if(product?.group==="market"&&!marketProductCanBuy){
-      setError(t("该商品尚未完成支付及交付验收。","This listing is not yet approved for payment and delivery."));return;
+    if(paymentMethod==="wechat"&&product?.group==="production"&&await detectMiniPaymentContext()){
+      const opened=await openMiniWechatTopup(product.priceRmb);
+      if(!opened)setError(t("暂时无法打开微信付款，请返回余额页面重试。","Could not open WeChat payment. Please return to your wallet and try again."));
+      return;
     }
-    if(product?.group==="software"&&!softwareAvailable){setError(t("软件交付与支付尚未完成上线验收。","Software delivery and payment are not yet approved."));return;}
+    if(product?.group==="market"&&!marketProductCanBuy){
+      setError(t("该商品暂未开售，请稍后再来。","This listing is not yet approved for payment and delivery."));return;
+    }
+    if(product?.group==="software"&&!softwareAvailable){setError(t("这款软件暂未开售。","Software delivery and payment are not yet approved."));return;}
     if (!providersLoaded || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)){
       setError(t("所选支付渠道尚未开放，请返回查看可用支付方式。","This payment provider is not yet available."));
       return;
@@ -551,7 +557,7 @@ const orderIdRef = useRef<string | null>(null);
             </div>
           </div>}
           {product.group==="market"&&!marketProductCanBuy&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此卖家商品尚未开放支付与交付。","This seller listing is not currently available for purchase.")}</p>}
-          {product.group==="software"&&!softwareAvailable&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此数字软件仍在进行文件与自动交付验收，尚未开售。","This software has not been released for sale. Delivery testing is in progress.")}</p>}
+          {product.group==="software"&&!softwareAvailable&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("这款软件正在准备中，开放购买后可在订单中获取文件。","This software is being prepared for sale.")}</p>}
           {status === "review" && (
             <button
               disabled={!providersLoaded || (product.group==="market"&&!marketProductCanBuy) || (product.group==="software"&&!softwareAvailable)}

@@ -121,7 +121,7 @@ const COPY:Record<LingxiLang,CheckoutCopy>={
 };
 
 type Payable={id:string;name:string;nameEn:string;amountUsd:number;group:"wallet"|"toolpass"|"software"|"market";note?:string;};
-function Inner(){
+function Inner({inMini=false}:{inMini?:boolean}){
  const sp=useSearchParams()??new URLSearchParams();
  const{lang}=useLingxiLang(),c=COPY[lang];
  const productId=sp.get("productId")||"";
@@ -136,6 +136,7 @@ function Inner(){
  const [usdWalletReady,setUsdWalletReady]=useState(false);
  const [productReady,setProductReady]=useState<boolean|null>(null);
  const [error,setError]=useState("");
+ const [copied,setCopied]=useState(false);
 
  const product:Payable|null=useMemo(()=>{
   if(balance)return{id:balance.id,name:balance.nameZh,nameEn:balance.nameEn,amountUsd:balance.amountUsd,group:"wallet"};
@@ -146,10 +147,11 @@ function Inner(){
  },[balance,catalog,marketProduct]);
 
  useEffect(()=>{
+  if(inMini)return;
   const s=createClient();
   void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
   void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>{setPaypalReady(d?.paypal===true);setUsdWalletReady(d?.usdBalanceTopupReady===true);}).catch(()=>{setPaypalReady(false);setUsdWalletReady(false);});
- },[]);
+ },[inMini]);
  useEffect(()=>{
   if(!isMarketProductId(productId)){setMarketLoading(false);setMarketProduct(null);setMarketReady(false);return;}
   let active=true;setMarketLoading(true);
@@ -184,11 +186,19 @@ function Inner(){
  const requestedReturn=sp.get("redirect")||defaultReturn;
  const returnPath=requestedReturn.startsWith("/")&&!requestedReturn.startsWith("//")&&!requestedReturn.includes("\\")?requestedReturn:defaultReturn;
 
+ const publicCheckout=product?
+  "https://lingxifield.com/checkout-usd?"+new URLSearchParams({productId:product.id,redirect:returnPath}).toString():"";
+
+ async function copyCheckout(){
+  try{await navigator.clipboard.writeText(publicCheckout);setCopied(true)}
+  catch{setCopied(false)}
+ }
+
  async function pay(){
-  if(!product||paymentReady!==true||productReady!==true)return;
+  if(inMini||!product||paymentReady!==true||productReady!==true)return;
   setBusy(true);setError("");
   try{
-   const r=await fetch("/api/pay/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({productId:product.id,returnPath})});
+   const r=await fetch("/api/pay/create",{method:"POST",headers:{"Content-Type":"application/json"},signal:AbortSignal.timeout(35000),body:JSON.stringify({productId:product.id,returnPath})});
    const d=await r.json().catch(()=>({}));
    if(r.status===401){location.href=`/account?next=${encodeURIComponent(location.pathname+location.search)}`;return;}
    if(!r.ok||!d.url)throw new Error(d.error||"PAYPAL_CREATE_FAILED");
@@ -214,12 +224,16 @@ function Inner(){
     </div>
    </div>
    <p className="mt-4 text-xs leading-6 text-[var(--lx-faint)]">{c.fx}</p>
-   <button disabled={busy||!paymentReady||productReady!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>
-   {!paymentReady&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
-   {paypalReady&&productReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+   {inMini?<div className="mt-6 space-y-3">
+    <p className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"请在手机浏览器中打开此页，登录官网后使用 PayPal 付款。":"Open this page in your phone browser, then sign in to pay with PayPal."}</p>
+    <input aria-label={lang==="zh"?"官网付款链接":"Website checkout link"} readOnly value={publicCheckout} onFocus={event=>event.currentTarget.select()} className="w-full rounded-xl border p-3 text-sm"/>
+    <button type="button" onClick={copyCheckout} className="min-h-11 rounded-xl border px-4 py-2 text-sm">{lang==="zh"?(copied?"链接已复制":"复制官网付款链接"):(copied?"Link copied":"Copy checkout link")}</button>
+   </div>:<button disabled={busy||!paymentReady||productReady!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>}
+   {!inMini&&!paymentReady&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+   {!inMini&&paypalReady&&productReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
   <div className="mt-6"><PaypalHelp compact/></div>
  </main><Footer/></>;
 }
-export default function Page(){return <MiniPaymentBoundary><Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense></MiniPaymentBoundary>}
+export default function Page(){return <MiniPaymentBoundary miniChildren={<Suspense fallback={<div className="p-20 text-center">…</div>}><Inner inMini/></Suspense>}><Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense></MiniPaymentBoundary>}
