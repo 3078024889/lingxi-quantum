@@ -273,7 +273,7 @@ jobs:
             throw Error("EXACT_CANARY_TIMEOUT:"+expected);
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-      - name: Verify identical application source and all seven public R2 objects before cutover
+      - name: Verify identical application source and all eight public R2 objects before cutover
         env:
           VERIFIED_CANARY_SHA: ${{ steps.canary.outputs.sha }}
         run: |
@@ -287,7 +287,7 @@ jobs:
           if(!/^[a-f0-9]{40}$/.test(sha||''))throw Error('INVALID_EXACT_CANARY_SHA');
           const base='https://lingxifield-com-canary-'+sha.slice(0,12)+'.3078024889.workers.dev';
           const report=JSON.parse(await readFile('cloudflare-offload-report.json','utf8'));
-          if(report.bucketName!=='lingxifield-com-large-public'||report.assets?.length!==7)throw Error('PUBLIC_R2_MANIFEST_MISMATCH');
+          if(report.bucketName!=='lingxifield-com-large-public'||report.assets?.length!==8)throw Error('PUBLIC_R2_MANIFEST_MISMATCH');
           for(const asset of report.assets){
             if(!/^\/(models|runtime|media|_next\/static\/media)\/[a-zA-Z0-9._/-]+$/.test(asset.path)||asset.path.includes('..')||asset.r2Key!=='public'+asset.path||!/^[a-f0-9]{64}$/.test(asset.sha256))throw Error('INVALID_PUBLIC_R2_MANIFEST_ENTRY');
             const head=await fetch(base+asset.path,{method:'HEAD',headers:{'accept-encoding':'identity'},signal:AbortSignal.timeout(60000)});
