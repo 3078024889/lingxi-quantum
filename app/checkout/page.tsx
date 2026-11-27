@@ -89,7 +89,7 @@ function CheckoutInner() {
       .then(x=>{
         if(!active)return;
         setRemoteMarketProduct(x?.product||null);
-        setMarketProductCanBuy(x?.availableCny===true);
+        setMarketProductCanBuy(x?.available===true);
       }).catch(()=>{if(active)setRemoteMarketProduct(null)})
       .finally(()=>{if(active)setMarketProductLoading(false)});
     return()=>{active=false};
@@ -110,7 +110,7 @@ function CheckoutInner() {
     if(product?.group!=="software")return;
     let alive=true;
     fetch("/api/sasi/software/catalog",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(v=>{
-      if(alive)setSoftwareAvailable(v?.products?.[product.id]?.availableCny===true);
+      if(alive)setSoftwareAvailable(v?.products?.[product.id]?.available===true);
     }).catch(()=>{});
     return()=>{alive=false};
   },[product?.id,product?.group]);

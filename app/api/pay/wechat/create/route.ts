@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
@@ -16,7 +17,6 @@ import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
-import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -68,9 +68,6 @@ export async function POST(req: NextRequest) {
     }
 
     const { productId, code, state } = await req.json();
-    const supabase = createClient();
-    const {data:{user}}=await supabase.auth.getUser();
-    if(!user)return NextResponse.json({error:"请先登录"},{status:401});
 // code存在，说明前端是在微信内置浏览器里、已经走完静默授权拿到了
     // 微信的一次性code——这种场景走JSAPI（直接在微信里弹收银台），
     // 不再是Native扫码（微信自己的内置浏览器不允许自己弹二维码给自己
@@ -90,12 +87,23 @@ export async function POST(req: NextRequest) {
     }
     if(product.group==="toolpass"&&!toolPassCommerceReady())
       return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
-    if (product.group === "production" && (!sasiRmbBalanceV1Enabled() || !sasiTopupProductEnabled(product.id))) {
+    if (product.group === "production" && !sasiRmbBalanceV1Enabled()) {
+      return NextResponse.json({ error: "CNY_BALANCE_TOPUP_NOT_ENABLED" }, { status: 503 });
+    }
+    if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
       return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
+
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
+    }
 
     if(product.group==="market"&&product.sellerId===user.id)
       return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
@@ -103,9 +111,13 @@ export async function POST(req: NextRequest) {
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-wechat",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
+    const orderId = randomUUID();
+    const outTradeNo = `LX${orderId.replace(/-/g, "")}`.slice(0, 32);
     const { data: order, error: orderErr } = await admin
       .from("orders")
       .insert({
+        id: orderId,
+        provider_payment_id: outTradeNo,
         user_id: user.id,
         product_id: product.id,
         product_type: product.type,
@@ -124,10 +136,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const baseUrl = trustedSiteOrigin(req);
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
     // 微信支付要求商户订单号只能是数字、大小写字母、下划线，用我们自己的
     // order.id（uuid）会带短横线，不符合要求，这里做一个安全的转换。
-    const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 32);
     // 微信支付金额单位是"分"，我们数据库里存的priceRmb是"元"，这里换算，
     // 用Math.round避免浮点数精度问题（比如68.1元算出来变成6809分而不是6810分）。
     const amountFen = Math.round(product.priceRmb * 100);
@@ -151,7 +162,6 @@ export async function POST(req: NextRequest) {
         });
         const jsapi = buildJsapiInvokeParams(prepayId);
 
-        await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
 
         return NextResponse.json({ orderId: order.id, jsapi, outTradeNo });
       }
@@ -163,7 +173,6 @@ export async function POST(req: NextRequest) {
         notifyUrl: `${baseUrl}/api/pay/wechat/notify`,
       });
 
-      await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
 
       return NextResponse.json({ orderId: order.id, codeUrl, outTradeNo });
     } catch (e) {
