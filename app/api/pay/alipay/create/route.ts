@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
-import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alipay";
+import { alipayEnabled, createAlipayPaymentUrl } from "@/lib/alipay";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 import { safeLocalReturnPath, sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
+import {createAlipayHandoff} from "@/lib/alipay-handoff";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -27,19 +28,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
     const { productId, returnPath } = await req.json();
-const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
+    const supabase=createClient();
+    const {data:{user}}=await supabase.auth.getUser();
+    if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+    const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     if(product.group==="toolpass"&&!toolPassCommerceReady())
       return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
-    if (product.group === "production" && !sasiRmbBalanceV1Enabled()) return NextResponse.json({ error: "CNY_BALANCE_TOPUP_NOT_ENABLED" }, { status: 503 });
-    if (product.group === "production" && !sasiTopupProductEnabled(product.id)) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
+    if (product.group === "production" && (!sasiRmbBalanceV1Enabled() || !sasiTopupProductEnabled(product.id))) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
       return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需创建支付订单。" }, { status: 400 });
-
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
     if(product.group==="market"&&product.sellerId===user.id)
       return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
@@ -47,11 +46,7 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-alipay",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
-    const orderId = randomUUID();
-    const outTradeNo = `LX${orderId.replace(/-/g, "")}`.slice(0, 64);
     const { data: order, error } = await admin.from("orders").insert({
-      id: orderId,
-      provider_payment_id: outTradeNo,
       user_id: user.id,
       product_id: product.id,
       product_type: product.type,
@@ -63,7 +58,8 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     }).select().single();
     if (error || !order) return NextResponse.json({ error: "创建订单失败" }, { status: 500 });
 
-    const baseUrl = alipaySiteUrl();
+    const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 64);
+    const baseUrl = trustedSiteOrigin(req);
     const destination = safeLocalReturnPath(returnPath, "/account/orders");
     try {
       const userAgent = req.headers.get("user-agent") ?? "";
@@ -76,7 +72,11 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,
       });
-      return NextResponse.json({ orderId: order.id, url: paymentUrl });
+      const saved=await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
+      if(saved.error)throw new Error("ALIPAY_ORDER_SAVE_FAILED");
+      // Keep the signed provider URL on the server; mobile handoff stays copyable.
+      void paymentUrl;
+      return NextResponse.json({ orderId: order.id, url: `${baseUrl}/pay/alipay/${createAlipayHandoff(order.id)}` });
     } catch (gatewayError) {
       console.error("[alipay create] failed", { orderId: order.id, gatewayError });
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
