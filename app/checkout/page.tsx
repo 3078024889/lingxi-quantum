@@ -1,5 +1,6 @@
 "use client";
 import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
+import {detectMiniPaymentContext,openMiniWechatTopup} from "@/lib/mini/payment-client";
 
 import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -359,6 +360,11 @@ const orderIdRef = useRef<string | null>(null);
   // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
   // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
+    if(paymentMethod==="wechat"&&product?.group==="production"&&await detectMiniPaymentContext()){
+      const opened=await openMiniWechatTopup(product.priceRmb);
+      if(!opened)setError(t("暂时无法打开微信付款，请返回余额页面重试。","Could not open WeChat payment. Please return to your wallet and try again."));
+      return;
+    }
     if(product?.group==="market"&&!marketProductCanBuy){
       setError(t("该商品暂未开售，请稍后再来。","This listing is not yet approved for payment and delivery."));return;
     }

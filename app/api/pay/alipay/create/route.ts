@@ -10,6 +10,7 @@ import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
+import {createAlipayHandoff} from "@/lib/alipay-handoff";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -71,8 +72,11 @@ export async function POST(req: NextRequest) {
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,
       });
-      await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
-      return NextResponse.json({ orderId: order.id, url: paymentUrl });
+      const saved=await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
+      if(saved.error)throw new Error("ALIPAY_ORDER_SAVE_FAILED");
+      // Keep the signed provider URL on the server; mobile handoff stays copyable.
+      void paymentUrl;
+      return NextResponse.json({ orderId: order.id, url: `${baseUrl}/pay/alipay/${createAlipayHandoff(order.id)}` });
     } catch (gatewayError) {
       console.error("[alipay create] failed", { orderId: order.id, gatewayError });
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
