@@ -1511,18 +1511,6 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "url-to-video",
-    "capabilities": [
-      "web.promotion"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "optional-external"
-  },
-  {
     "slug": "uuid-generator",
     "capabilities": [
       "text.transform"
@@ -1645,6 +1633,18 @@
     "slug": "xml-formatter",
     "capabilities": [
       "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "password-generator",
+    "capabilities": [
+      "privacy.password.generate"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,

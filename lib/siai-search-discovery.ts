@@ -13,7 +13,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "按问题进入工具比较目录；产品价格、地区、商用授权请查看官方来源。",
     "trio": [
       "全球 SIAI 排行榜",
-      "SASI 智能创作",
+      "SASI 智能软件市场",
       "100+ 在线实用工具"
     ],
     "extras": [
@@ -66,7 +66,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "Compare products by task and use official sources for current pricing and regional terms.",
     "trio": [
       "SIAI Tool Directory",
-      "SASI Creative Tools",
+      "SASI Intelligent Software Marketplace",
       "100+ Online Utilities"
     ],
     "extras": [
@@ -119,7 +119,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "用途で比較し、価格と地域の条件は公式情報を確認してください。",
     "trio": [
       "SIAIツール一覧",
-      "SASI創作",
+      "SASIインテリジェントソフトウェア市場",
       "100種類以上のツール"
     ],
     "extras": [
@@ -172,7 +172,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "용도에 맞게 비교하고 요금·지역 조건은 공식 자료를 확인하세요.",
     "trio": [
       "SIAI 도구 목록",
-      "SASI 제작",
+      "SASI 지능형 소프트웨어 마켓",
       "100+ 온라인 도구"
     ],
     "extras": [
@@ -225,7 +225,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "Comparez les usages et consultez les sources officielles pour les prix et régions.",
     "trio": [
       "Répertoire SIAI",
-      "Création SASI",
+      "Marché de logiciels intelligents SASI",
       "100+ outils en ligne"
     ],
     "extras": [
@@ -278,7 +278,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "Vergleichen Sie nach Aufgabe und prüfen Sie Preise und Regionen beim Anbieter.",
     "trio": [
       "SIAI-Verzeichnis",
-      "SASI-Kreation",
+      "SASI-Markt für intelligente Software",
       "100+ Online-Tools"
     ],
     "extras": [
@@ -331,7 +331,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "Compare por tarea y consulte las fuentes oficiales de precios y regiones.",
     "trio": [
       "Directorio SIAI",
-      "Creación SASI",
+      "Mercado de software inteligente SASI",
       "100+ herramientas"
     ],
     "extras": [
@@ -384,7 +384,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "Compare por objetivo e confirme preços e regiões nas fontes oficiais.",
     "trio": [
       "Diretório SIAI",
-      "Criação SASI",
+      "Mercado de software inteligente SASI",
       "100+ ferramentas"
     ],
     "extras": [
@@ -437,7 +437,7 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "footerNote": "قارن حسب المهمة وتحقق من الأسعار والبلدان لدى المصدر الرسمي.",
     "trio": [
       "دليل SIAI",
-      "إبداع SASI",
+      "سوق برامج SASI الذكية",
       "أكثر من 100 أداة"
     ],
     "extras": [

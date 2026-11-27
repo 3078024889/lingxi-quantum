@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
@@ -10,10 +11,10 @@ import {
   wechatPayEnabled,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
-import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -27,6 +28,11 @@ export const maxDuration = 30;
 /** Only emit merchant status and documented code; do not log orders, signatures or payment payloads. */
 function safeWechatFailure(error:unknown){
   const message=error instanceof Error?error.message:"";
+  const apiCode=message.match(/^WECHAT_API_(\d{3}):([A-Z0-9_]{1,64})$/);
+  if(apiCode)return {kind:"GATEWAY_RESPONSE",httpStatus:Number(apiCode[1]),providerCode:apiCode[2]};
+  const oauthCode=message.match(/errcode\s+(\d{1,7})/);
+  if(oauthCode)return {kind:"WECHAT_AUTHORIZATION",providerCode:oauthCode[1]};
+  if(/^WECHAT_RESPONSE_[A-Z_]+$/.test(message))return {kind:message};
   const match=message.match(/微信支付接口返回错误\s+(\d{3}):\s*(\{[\s\S]*\})/);
   if(match){
     let code="UNKNOWN";
@@ -79,8 +85,11 @@ export async function POST(req: NextRequest) {
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
-    if(product.group==="toolpass"&&!toolPassBackendReady())
+    if(product.group==="toolpass"&&!toolPassCommerceReady())
       return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
+    if (product.group === "production" && !sasiRmbBalanceV1Enabled()) {
+      return NextResponse.json({ error: "CNY_BALANCE_TOPUP_NOT_ENABLED" }, { status: 503 });
+    }
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
@@ -102,9 +111,13 @@ export async function POST(req: NextRequest) {
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-wechat",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
+    const orderId = randomUUID();
+    const outTradeNo = `LX${orderId.replace(/-/g, "")}`.slice(0, 32);
     const { data: order, error: orderErr } = await admin
       .from("orders")
       .insert({
+        id: orderId,
+        provider_payment_id: outTradeNo,
         user_id: user.id,
         product_id: product.id,
         product_type: product.type,
@@ -126,7 +139,6 @@ export async function POST(req: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
     // 微信支付要求商户订单号只能是数字、大小写字母、下划线，用我们自己的
     // order.id（uuid）会带短横线，不符合要求，这里做一个安全的转换。
-    const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 32);
     // 微信支付金额单位是"分"，我们数据库里存的priceRmb是"元"，这里换算，
     // 用Math.round避免浮点数精度问题（比如68.1元算出来变成6809分而不是6810分）。
     const amountFen = Math.round(product.priceRmb * 100);
@@ -150,7 +162,6 @@ export async function POST(req: NextRequest) {
         });
         const jsapi = buildJsapiInvokeParams(prepayId);
 
-        await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
 
         return NextResponse.json({ orderId: order.id, jsapi, outTradeNo });
       }
@@ -162,14 +173,13 @@ export async function POST(req: NextRequest) {
         notifyUrl: `${baseUrl}/api/pay/wechat/notify`,
       });
 
-      await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
 
       return NextResponse.json({ orderId: order.id, codeUrl, outTradeNo });
     } catch (e) {
       console.error("[wechat-create-gateway]",safeWechatFailure(e));
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
-        { error: useJsapi ? "微信网页授权或JSAPI下单失败" : "微信支付网关返回异常"},
+        { error: "暂时无法打开微信付款，请返回充值页面重试。"},
         { status: 500 }
       );
     }

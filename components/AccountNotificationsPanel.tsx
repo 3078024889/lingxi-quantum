@@ -3,13 +3,14 @@ import Link from "next/link";
 import {useCallback,useEffect,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {moneyText} from "@/lib/notifications/money-copy";
-type Item={eventKey:string;kind:string;title:string;body:string;createdAt:string;href?:string;read?:boolean};
+import {loadUnifiedNotificationFeed,type UnifiedNotice} from "@/lib/notifications/unified-public-feed";
+type Item=UnifiedNotice;
 export default function AccountNotificationsPanel(){
  const {lang}=useLingxiLang();
  const[items,setItems]=useState<Item[]>([]);const[loading,setLoading]=useState(true);const[error,setError]=useState(false);
- const load=useCallback(async()=>{try{const r=await fetch(`/api/account/notifications?lang=${lang}`,{cache:"no-store"});const d=await r.json();if(!r.ok||d.partial)throw new Error();setItems(Array.isArray(d.items)?d.items:[]);setError(false)}catch{setError(true)}finally{setLoading(false)}},[lang]);
+ const load=useCallback(async()=>{try{const d=await loadUnifiedNotificationFeed(lang,"/api/account/notifications");if(!d.available)throw new Error("NOTIFICATIONS_UNAVAILABLE");setItems(d.items);setError(false)}catch{setError(true)}finally{setLoading(false)}},[lang]);
  useEffect(()=>{void load();const timer=setInterval(load,30000);return()=>clearInterval(timer)},[load]);
- async function mark(x:Item){if(x.read)return;try{const r=await fetch("/api/account/notifications",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({eventKeys:[x.eventKey]})});if(r.ok){setItems(v=>v.map(i=>i.eventKey===x.eventKey?{...i,read:true}:i));window.dispatchEvent(new Event('lingxi-money-updated'))}}catch{setError(true)}}
+ async function mark(x:Item){if(x.read)return;try{const r=await fetch("/api/account/notifications",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({eventKeys:[x.eventKey]})});if(r.ok||x.kind==="announcement"){try{localStorage.setItem("lx-notifications-seen-at",new Date().toISOString())}catch{};setItems(v=>v.map(i=>i.eventKey===x.eventKey?{...i,read:true}:i));window.dispatchEvent(new Event('lingxi-money-updated'))}}catch{setError(true)}}
  if(loading)return <p className="text-sm text-[var(--lx-muted)]">{moneyText(lang,"loading")}</p>;
  if(error)return <p role="alert">{moneyText(lang,'unavailable')} <button className="underline" onClick={()=>void load()}>{moneyText(lang,'refresh')}</button></p>;
  if(!items.length)return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-sm text-[var(--lx-muted)]">{moneyText(lang,"empty")}</div>;

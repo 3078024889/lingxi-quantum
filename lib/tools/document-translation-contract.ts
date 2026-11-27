@@ -1,5 +1,13 @@
 export const TRANSLATION_LANGUAGES=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
 export type TranslationSegment={id:string;text:string};
+export type TranslationContext={before:string;after:string};
+export function translationContext(value:unknown):TranslationContext {
+ if(value===undefined)return {before:'',after:''};
+ if(!value||typeof value!=='object')throw Error('TRANSLATION_CONTEXT_INVALID');
+ const {before,after}=value as Partial<TranslationContext>;
+ if(typeof before!=='string'||typeof after!=='string'||before.length>1200||after.length>1200)throw Error('TRANSLATION_CONTEXT_INVALID');
+ return {before,after};
+}
 export function translationSegments(value:unknown):TranslationSegment[]{
  if(!Array.isArray(value)||!value.length||value.length>80)throw Error('TRANSLATION_SEGMENTS_INVALID');
  const ids=new Set<string>();let chars=0;

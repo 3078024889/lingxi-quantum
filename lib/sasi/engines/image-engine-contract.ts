@@ -1,1 +1,0 @@
-export const IMAGE_OPERATIONS=["compress","convert","stitch","repair","superres","denoise","matting","crop","generate","edit"] as const;export type ImageOperation=typeof IMAGE_OPERATIONS[number];

@@ -11,6 +11,7 @@ import type{ToolMeta,ToolResultFile}from"@/lib/tools/types";
 import{IMAGE_RATIO_PRESETS,IMAGE_SIZE_PRESETS,linkedImageDimensions,ratioForSize}from"@/lib/tools/shared/image-presets";
 import{extensionForResizeMime,resizeImagePro,type ResizeFitMode,type ResizeOutputMime}from"@/lib/tools/shared/image-resize-pro";
 type Props={tool:ToolMeta};type Source={width:number;height:number};
+type SizeDrag={pointer:number;x:number;y:number;frameWidth:number;frameHeight:number;width:number;height:number};
 type DragStart={pointer:number;x:number;y:number;fx:number;fy:number;overflowX:number;overflowY:number};
 const DIRECT_DRAG:Record<LingxiLang,[string,string,string]>={
  zh:["直接拖动图片，调整保留的画面。","精细调整（可选）","图片在本机浏览器中处理，生成后确认再保存。"],
@@ -27,6 +28,7 @@ export default function ResizeImageWorkbench({tool}:Props){
  const{lang}=useLingxiLang(),t=(z:string,e:string)=>toolRuntimeText(lang,z,e);
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState<Source|null>(null),[width,setWidth]=useState(1200),[height,setHeight]=useState(900),[ratio,setRatio]=useState("4:3"),[fit,setFit]=useState<ResizeFitMode>("smart"),[fx,setFx]=useState(50),[fy,setFy]=useState(50),[bg,setBg]=useState("#ffffff"),[output,setOutput]=useState<ResizeOutputMime>("image/jpeg"),[quality,setQuality]=useState(.92),[upscale,setUpscale]=useState(true),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]),[methods,setMethods]=useState<string[]>([]);
  const sourceFile=files[0],previewUrl=useObjectUrl(sourceFile),ratioRef=useRef(ratio);
+ const frameRef=useRef<HTMLDivElement>(null),sizeDrag=useRef<SizeDrag|null>(null);
  const previewDrag=useRef<DragStart|null>(null),settingsVersion=useRef(0),filesVersion=useRef(0);
  ratioRef.current=ratio;
  // A previously generated file must never masquerade as output for changed settings.
@@ -36,6 +38,25 @@ export default function ResizeImageWorkbench({tool}:Props){
  function chooseRatio(id:string){setRatio(id);const r=IMAGE_RATIO_PRESETS.find(x=>x.id===id)?.ratio;if(r){const d=linkedImageDimensions('width',width,r);setWidth(d.width);setHeight(d.height)}}
  function w(v:number){if(ratioValue){const d=linkedImageDimensions('width',v,ratioValue);setWidth(d.width);setHeight(d.height)}else setWidth(Math.max(1,Math.min(16384,v||1)))}
  function h(v:number){if(ratioValue){const d=linkedImageDimensions('height',v,ratioValue);setWidth(d.width);setHeight(d.height)}else setHeight(Math.max(1,Math.min(16384,v||1)))}
+ function scaleSize(start:Source,factor:number){
+  const max=Math.min(16384/start.width,16384/start.height,Math.sqrt(39_990_000/start.width/start.height));
+  const scale=Math.max(0,Math.min(max,factor));
+  setWidth(Math.max(1,Math.floor(start.width*scale)));
+  setHeight(Math.max(1,Math.floor(start.height*scale)));
+ }
+ function startSizeDrag(e:PointerEvent<HTMLButtonElement>){
+  const frame=frameRef.current?.getBoundingClientRect();
+  if(!frame||!e.isPrimary||e.button!==0||busy)return;
+  sizeDrag.current={pointer:e.pointerId,x:e.clientX,y:e.clientY,frameWidth:frame.width,frameHeight:frame.height,width,height};
+  e.currentTarget.setPointerCapture(e.pointerId);
+ }
+ function moveSizeDrag(e:PointerEvent<HTMLButtonElement>){
+  const start=sizeDrag.current;
+  if(!start||start.pointer!==e.pointerId||busy)return;
+  const dx=e.clientX-start.x,dy=e.clientY-start.y;
+  const change=(dx*start.frameWidth+dy*start.frameHeight)/(start.frameWidth**2+start.frameHeight**2);
+  scaleSize(start,1+change);
+ }
  function startDrag(e:PointerEvent<HTMLDivElement>){
   if(fit!=="cover"||!source||!previewUrl||busy||!e.isPrimary||e.button!==0)return;
   const box=e.currentTarget.getBoundingClientRect();
@@ -71,16 +92,55 @@ export default function ResizeImageWorkbench({tool}:Props){
  },[fit,fx,fy,bg,source,width,height,upscale]);
  return <div className="space-y-5">
   <FileDropzone accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple append maxFiles={20} maxSizeMB={80} files={files} onChange={f=>{filesVersion.current++;setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
-  {files.length>0&&<div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_330px]"><div className="space-y-5">
+  {files.length>0&&<div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+   <section className="min-w-0 space-y-3 rounded-xl border border-white/10 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-bone">
+     <h3 className="font-medium">{t("拖动调整图片大小","Drag to resize")}</h3>
+     <output data-testid="resize-output-size">{width}×{height} px</output>
+    </div>
+    <p className="text-sm text-bone-dim" id="resize-gesture-hint">{t("拖右下角缩放，画面比例会保持。","Drag the bottom-right corner to scale while keeping the proportions.")}</p>
+    <div className="flex justify-center rounded-lg bg-[var(--lx-soft)] px-7 pb-7 pt-4">
+     <div className="relative" style={{width:`min(${Math.min(100,Math.max(12,70*width/Math.min(2400,source?.width??1200)))}%, ${Math.max(1,380*width/height)}px)`}}>
+      <div ref={frameRef} data-testid="resize-drag-preview" data-fit={fit} data-focus-x={fx} data-focus-y={fy}
+       onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={finishDrag} onPointerCancel={finishDrag}
+       onLostPointerCapture={()=>{previewDrag.current=null}}
+       className="relative overflow-hidden rounded-lg border border-white/10"
+       style={{backgroundColor:bg,aspectRatio:`${width}/${height}`,touchAction:fit==="cover"?"none":"pan-y pinch-zoom",cursor:fit==="cover"?"grab":"auto"}}>
+       {previewUrl&&<img src={previewUrl} alt="" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full select-none" style={preview}/>}
+      </div>
+      {source&&<button type="button" data-testid="resize-size-grip" disabled={busy}
+       aria-label={t("缩放图片","Scale image")} aria-describedby="resize-gesture-hint"
+       onPointerDown={startSizeDrag} onPointerMove={moveSizeDrag}
+       onLostPointerCapture={()=>{sizeDrag.current=null}}
+       onKeyDown={e=>{
+        const larger=e.key==="ArrowRight"||e.key==="ArrowUp"||e.key==="+";
+        if(!larger&&e.key!=="ArrowLeft"&&e.key!=="ArrowDown"&&e.key!=="-")return;
+        e.preventDefault();
+        scaleSize({width,height},larger?1.1:.9);
+       }}
+       className="absolute bottom-0 right-0 grid h-11 w-11 translate-x-1/2 translate-y-1/2 cursor-nwse-resize touch-none place-items-center rounded-full border border-lattice bg-[var(--lx-bg)] text-lg text-[var(--lx-ink)] shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50">
+       <span aria-hidden="true">⤢</span>
+      </button>}
+     </div>
+    </div>
+    <p className="text-sm leading-5 text-bone-dim">
+     {fit==="smart"?t("最终智能裁切在处理时逐张计算；这里显示目标比例。","The final smart crop is computed per image when processing; this shows the target ratio."):fit==="cover"?DIRECT_DRAG[lang][0]:fit==="contain"?t("整图保留并补边。","Keeps the full image with padding."):t("整图拉伸到目标宽高。","Stretches to the target size.")}
+    </p>
+    <p className="text-sm leading-5 text-bone-dim">{DIRECT_DRAG[lang][2]}</p>
+   </section>
+   <div className="min-w-0 space-y-5">
    <section className="rounded-xl border border-white/10 p-4"><div className="mb-3 flex flex-wrap justify-between gap-2"><div><h3 className="font-medium text-bone">{t("先选比例","Choose aspect ratio")}</h3><p className="mt-1 text-sm text-bone-dim">{t("比例决定画面形状；像素决定最终分辨率。","Ratio controls shape; pixels control resolution.")}</p></div>{source&&<span className="text-sm text-bone-dim">{t("原图","Source")} {source.width}×{source.height}</span>}</div><div className="flex flex-wrap gap-2">{IMAGE_RATIO_PRESETS.map(p=><button key={p.id} onClick={()=>chooseRatio(p.id)} disabled={busy} type="button" className={`min-h-[44px] rounded-full border px-3 py-1.5 text-sm ${ratio===p.id?"border-lattice bg-lattice/15 text-bone":"border-white/10 text-bone-dim"}`}>{lang==="zh"?p.labelZh:p.labelEn}</button>)}</div></section>
    <section className="rounded-xl border border-white/10 p-4"><h3 className="font-medium text-bone">{t("常用尺寸","Common sizes")}</h3><div className="mt-3 flex flex-wrap gap-2">{IMAGE_SIZE_PRESETS.map(p=><button key={p.id} onClick={()=>{setWidth(p.width);setHeight(p.height);setRatio(ratioForSize(p.width,p.height))}} disabled={busy} type="button" className="min-h-[44px] rounded-lg border border-white/10 px-3 py-2 text-left text-sm text-bone-dim hover:border-lattice/50"><span className="block text-sm opacity-60">{lang==="zh"?p.groupZh:p.groupEn}</span>{p.label}</button>)}</div></section>
-   <section className="rounded-xl border border-white/10 p-4"><div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr]"><label className="text-sm text-bone-dim">{t("宽度 px","Width px")}<EditableNumberInput disabled={busy} type="number" value={width} onChange={e=>w(Number(e.target.value))} className="bg-void mt-1 w-full rounded-lg border border-white/15 px-3 py-2 text-bone"/></label><button disabled={busy} type="button" onClick={()=>{const a=width;setWidth(height);setHeight(a);setRatio(ratioForSize(height,a))}} className="mt-6 min-h-[44px] rounded-lg border border-white/10 px-3 text-bone-dim">↔</button><label className="text-sm text-bone-dim">{t("高度 px","Height px")}<EditableNumberInput disabled={busy} type="number" value={height} onChange={e=>h(Number(e.target.value))} className="bg-void mt-1 w-full rounded-lg border border-white/15 px-3 py-2 text-bone"/></label></div></section>
+   <details className="rounded-xl border border-white/10 p-4">
+    <summary className="cursor-pointer text-sm text-bone">{t("精确像素（可选）","Exact pixels (optional)")}</summary>
+    <div className="mt-3"><div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr]"><label className="text-sm text-bone-dim">{t("宽度 px","Width px")}<EditableNumberInput disabled={busy} type="number" value={width} onChange={e=>w(Number(e.target.value))} className="bg-void mt-1 w-full rounded-lg border border-white/15 px-3 py-2 text-bone"/></label><button disabled={busy} type="button" onClick={()=>{const a=width;setWidth(height);setHeight(a);setRatio(ratioForSize(height,a))}} className="mt-6 min-h-[44px] rounded-lg border border-white/10 px-3 text-bone-dim">↔</button><label className="text-sm text-bone-dim">{t("高度 px","Height px")}<EditableNumberInput disabled={busy} type="number" value={height} onChange={e=>h(Number(e.target.value))} className="bg-void mt-1 w-full rounded-lg border border-white/15 px-3 py-2 text-bone"/></label></div></div>
+   </details>
    <section className="rounded-xl border border-white/10 p-4"><h3 className="font-medium text-bone">{t("怎样适配新比例","How should it fit?")}</h3><div className="mt-3 grid gap-2 md:grid-cols-4">{([["smart",t("智能裁切","Smart crop"),t("逐张分析主体；可用时优先保护人脸","Analyzes each image; protects faces when available")],["cover",t("手动裁切","Manual crop"),t("保持比例，用焦点决定保留位置","Keeps ratio; focus controls the crop")],["contain",t("完整留白","Fit + padding"),t("不裁图片，空处补背景","No crop; pads empty space")],["stretch",t("拉伸填满","Stretch"),t("不裁切，但可能变形","No crop; may distort")]] as const).map(([id,a,b])=><button key={id} type="button" onClick={()=>setFit(id)} disabled={busy} className={`min-h-[44px] rounded-lg border p-3 text-left ${fit===id?"border-lattice bg-lattice/10":"border-white/10"}`}><span className="block text-sm text-bone">{a}</span><span className="mt-1 block text-sm leading-5 text-bone-dim">{b}</span></button>)}</div>
    {fit==="cover"&&<details data-testid="resize-focus-fine-tune" className="mt-4 text-sm text-bone-dim"><summary className="cursor-pointer">{DIRECT_DRAG[lang][1]}</summary><div className="mt-3 grid gap-3 sm:grid-cols-2"><label className="text-sm">{t("左右焦点","Horizontal focus")} {fx}%<input disabled={busy} className="mt-2 w-full" type="range" min={0} max={100} value={fx} onChange={e=>setFx(Number(e.target.value))}/></label><label className="text-sm">{t("上下焦点","Vertical focus")} {fy}%<input disabled={busy} className="mt-2 w-full" type="range" min={0} max={100} value={fy} onChange={e=>setFy(Number(e.target.value))}/></label></div></details>}
    {fit==="smart"&&<p className="mt-3 rounded-lg bg-[var(--lx-soft)] p-3 text-sm leading-5 text-bone-dim">{t("智能裁切不是固定居中：会分析边缘、细节、颜色与肤色倾向；浏览器支持原生人脸检测时再把人脸加入保护权重。批量时每张图单独计算。","Smart crop is not fixed-center: it scores edges, detail, color and skin-tone cues; native face detection is added when the browser provides it. Each batch image is analyzed separately.")}</p>}
    {fit==="contain"&&<label className="mt-4 flex items-center gap-3 text-sm text-bone-dim">{t("补边颜色","Padding color")}<input disabled={busy} type="color" value={bg} onChange={e=>setBg(e.target.value)}/><span className="font-mono text-sm">{bg}</span></label>}</section>
    <section className="rounded-xl border border-white/10 p-4"><div className="grid gap-4 sm:grid-cols-3"><label className="text-sm text-bone-dim">{t("输出格式","Output format")}<select disabled={busy} value={output} onChange={e=>setOutput(e.target.value as ResizeOutputMime)} className="bg-void mt-1 w-full rounded-lg border border-white/15 px-3 py-2 text-bone"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>{output!=="image/png"&&<label className="text-sm text-bone-dim">{t("质量","Quality")} {Math.round(quality*100)}%<input disabled={busy} className="mt-3 w-full" type="range" min={.4} max={1} step={.01} value={quality} onChange={e=>setQuality(Number(e.target.value))}/></label>}<label className="mt-6 flex items-center gap-2 text-sm text-bone-dim"><input disabled={busy} type="checkbox" checked={upscale} onChange={e=>setUpscale(e.target.checked)}/>{t("允许放大","Allow enlargement")}</label></div></section>
-  </div><aside className="space-y-3"><div className="rounded-xl border border-white/10 p-3"><div className="mb-2 flex justify-between text-sm text-bone-dim"><span>{t("构图预览","Composition preview")}</span><span>{width}×{height}</span></div><div data-testid="resize-drag-preview" data-fit={fit} data-focus-x={fx} data-focus-y={fy} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={finishDrag} onPointerCancel={finishDrag} onLostPointerCapture={()=>{previewDrag.current=null}} className="relative mx-auto w-full overflow-hidden rounded-lg border border-white/10" style={{backgroundColor:bg,aspectRatio:`${width}/${height}`,width:`min(100%, ${Math.max(1,440*width/height)}px)`,maxHeight:440,touchAction:fit==="cover"?"none":"pan-y pinch-zoom",cursor:fit==="cover"?"grab":"auto"}}>{previewUrl&&<img src={previewUrl} alt="" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full select-none" style={preview}/>}</div><p className="mt-2 text-sm leading-5 text-bone-dim">{fit==="smart"?t("最终智能裁切在处理时逐张计算；这里显示目标比例。","The final smart crop is computed per image when processing; this shows the target ratio."):fit==="cover"?DIRECT_DRAG[lang][0]:fit==="contain"?t("整图保留并补边。","Keeps the full image with padding."):t("整图拉伸到目标宽高。","Stretches to the target size.")}</p><p className="mt-2 text-sm leading-5 text-bone-dim">{DIRECT_DRAG[lang][2]}</p></div></aside></div>}
+  </div></div>}
   {files.length>0&&<div className="flex flex-wrap items-center gap-3"><button disabled={busy} onClick={run} className="rounded-xl bg-lattice px-5 py-3 text-sm font-medium text-void-deep disabled:opacity-40">{busy?t("处理中…","Processing…"):t(`处理 ${files.length} 张图片`,`Process ${files.length} image(s)`)}</button><button disabled={busy} onClick={()=>{filesVersion.current++;setFiles([]);setResults([])}} className="rounded-xl border border-white/10 px-4 py-3 text-sm text-bone-dim">{t("清空","Clear")}</button>{stage&&<span className="text-sm text-bone-dim">{stage}</span>}</div>}
   {!!results.length&&<ResultPanel sourceSlug={tool.slug} files={results} messageZh={`已按 ${width}×${height} 处理 ${results.length} 张图片。`} messageEn={`Processed ${results.length} image(s) at ${width}×${height}.`} details={{files:results.length,width,height,ratio,fit,format:output,cropMethods:[...new Set(methods)].join(",")}}/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>

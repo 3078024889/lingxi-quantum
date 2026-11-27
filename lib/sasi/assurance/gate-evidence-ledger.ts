@@ -1,1 +1,0 @@
-import type {GateEvidence,GateName} from "./production-gates";export class GateEvidenceLedger{private rows=new Map<GateName,GateEvidence>();record(name:GateName,pass:boolean,evidence:string[]){this.rows.set(name,{name,pass,evidence});return this.rows.get(name)!}all(){return [...this.rows.values()]}}

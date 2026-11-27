@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { detectMiniPaymentContext, openMiniRecharge } from "@/lib/mini/payment-client";
+import { getUsdBalanceProduct } from "@/lib/usd-products";
 
 export function isMiniPaymentContext() {
   if (typeof window === "undefined") return false;
@@ -15,7 +16,15 @@ export function isMiniPaymentContext() {
 export default function MiniPaymentBoundary({ children, miniChildren }: { children: ReactNode; miniChildren?: ReactNode }) {
   const [context, setContext] = useState<"checking" | "mini" | "web">("checking");
   const [message, setMessage] = useState("");
-  useEffect(() => { let alive = true; void detectMiniPaymentContext().then(mini => { if (alive) setContext(mini ? "mini" : "web"); }); return () => { alive = false; }; }, []);
+  useEffect(() => {
+    let alive = true;
+    const productId = new URLSearchParams(window.location.search).get("productId") || "";
+    const allowWebsiteUsdWallet = Boolean(getUsdBalanceProduct(productId));
+    void detectMiniPaymentContext().then(mini => {
+      if (alive) setContext(mini && !allowWebsiteUsdWallet ? "mini" : "web");
+    });
+    return () => { alive = false; };
+  }, []);
   async function openRecharge() {
     setMessage("正在打开小程序充值页…");
     const opened = await openMiniRecharge();

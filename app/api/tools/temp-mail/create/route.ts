@@ -42,6 +42,7 @@ export async function POST(req:NextRequest){
  try{const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();userId=user?.id||""}catch{}
 
  const passMode=toolPassBackendReady();
+ const freeAcceptance=process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"&&Boolean(userId);
  let passRequestId:string|null=null;
  if(passMode){
   if(!userId)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
@@ -63,7 +64,7 @@ export async function POST(req:NextRequest){
  }catch{return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
 
  let q:{allowed?:boolean;remaining?:number|null}={allowed:true,remaining:null};
- if(!passMode){
+ if(!passMode&&!freeAcceptance){
   const hashes:string[]=[],limits:number[]=[];
   if(accountHash){hashes.push(accountHash);limits.push(FREE_PER_ACCOUNT)}
   hashes.push(ipHash);limits.push(FREE_PER_IP);
@@ -85,7 +86,7 @@ export async function POST(req:NextRequest){
      const response=NextResponse.json({
        id:data.id,address:tempMailAddress(data.local_part),
        expiresAt:data.expires_at,ttlMinutes:TEMP_MAIL_TTL_MINUTES,
-       freeRemaining:passMode?null:Math.max(0,Number(q.remaining||0)),
+       freeRemaining:passMode||freeAcceptance?null:Math.max(0,Number(q.remaining||0)),
      });
      if(dev.cookie)response.cookies.set({name:DEVICE_COOKIE,value:dev.cookie,httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/",maxAge:DEVICE_MAX_AGE});
      response.cookies.set({name:TEMP_MAIL_ACCESS_COOKIE,value:createMailboxAccessCookie(data.id,token),httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/api/tools/temp-mail",maxAge:TEMP_MAIL_TTL_MINUTES*60});

@@ -112,7 +112,7 @@ export default function FileDropzone({
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";
 
   return <div>
-    <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing||authorizing)||undefined}
+    <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing||authorizing)||undefined} aria-busy={(normalizing||authorizing)||undefined}
       onKeyDown={e=>{if(!disabled&&!normalizing&&!authorizing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
       onClick={()=>!disabled&&!normalizing&&!authorizing&&inputRef.current?.click()}
       onDragEnter={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
@@ -120,7 +120,7 @@ export default function FileDropzone({
       onDragLeave={e=>{if(e.currentTarget.contains(e.relatedTarget as Node|null))return;setDrag(false)}}
       onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled&&!normalizing&&!authorizing)void apply(e.dataTransfer.files)}}
       className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${drag?"border-[var(--lx-line-strong)] bg-[var(--lx-soft)] ring-4 ring-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-soft)] hover:border-[var(--lx-line-strong)]"} ${disabled?"pointer-events-none opacity-50":""}`}>
-      <p className="text-base font-medium text-[var(--lx-ink)]">{drag?uploadText(lang,"dragActive"):plainText(lang,"choose")}</p>
+      <p className="text-base font-medium text-[var(--lx-ink)]">{uploadText(lang,drag?"dragActive":promptKey)}</p>
       <p className="mt-2 text-xs leading-5 text-[var(--lx-faint)]">
         {normalizing||authorizing?documentIntakeText(lang,"busy"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
       </p>

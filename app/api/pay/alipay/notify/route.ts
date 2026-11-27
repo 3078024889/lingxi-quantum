@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
-import { alipayAppId, alipaySellerId, verifyAlipayNotification } from "@/lib/alipay";
+import { alipayAppId, alipaySellerId, parseCnyMinorUnits, verifyAlipayNotification } from "@/lib/alipay";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -10,19 +10,29 @@ const text = (body: "success" | "failure", status = 200) =>
 
 export async function POST(req: Request) {
   try {
-    const form = await req.formData();
-    const params: Record<string, string> = {};
-    form.forEach((value, key) => { if (typeof value === "string") params[key] = value; });
+    const contentType = req.headers.get("content-type") ?? "";
+    if (!/^application\/x-www-form-urlencoded(?:\s*;|$)/i.test(contentType)) return text("failure", 415);
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (Number.isFinite(contentLength) && contentLength > 64 * 1024) return text("failure", 413);
+    const rawBody = await req.text();
+    if (Buffer.byteLength(rawBody, "utf8") > 64 * 1024) return text("failure", 413);
+    const form = new URLSearchParams(rawBody);
+    const params: Record<string, string> = Object.create(null);
+    for (const [key, value] of form.entries()) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) return text("failure", 400);
+      params[key] = value;
+    }
     if (!verifyAlipayNotification(params)) {
       console.error("[alipay notify] invalid signature");
       return text("failure", 401);
     }
-    if (params.app_id !== alipayAppId()) {
+    const expectedAppId = alipayAppId();
+    if (!expectedAppId || params.app_id !== expectedAppId) {
       console.error("[alipay notify] app_id mismatch");
       return text("failure", 422);
     }
     const expectedSeller = alipaySellerId();
-    if (expectedSeller && params.seller_id !== expectedSeller) {
+    if (!expectedSeller || params.seller_id !== expectedSeller) {
       console.error("[alipay notify] seller_id mismatch");
       return text("failure", 422);
     }
@@ -31,12 +41,12 @@ export async function POST(req: Request) {
 
     const admin = createAdminClient();
     const { data: order } = await admin.from("orders")
-      .select("id, amount_rmb, provider")
+      .select("id, amount_rmb, currency, provider")
       .eq("provider_payment_id", params.out_trade_no)
       .single();
-    const expectedFen = Math.round(Number(order?.amount_rmb) * 100);
-    const receivedFen = Math.round(Number(params.total_amount) * 100);
-    if (!order || order.provider !== "alipay" || !Number.isFinite(receivedFen) || receivedFen !== expectedFen) {
+    const expectedFen = parseCnyMinorUnits(order?.amount_rmb);
+    const receivedFen = parseCnyMinorUnits(params.total_amount);
+    if (!order || order.provider !== "alipay" || order.currency !== "CNY" || expectedFen === null || receivedFen === null || receivedFen !== expectedFen) {
       console.error("[alipay notify] payment did not match local order", { outTradeNo: params.out_trade_no });
       return text("failure", 422);
     }

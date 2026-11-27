@@ -12,6 +12,7 @@ export async function miniVirtualPaymentAvailable() {
 }
 
 type MiniBridge = { navigateTo: (options: { url: string; success: () => void; fail: () => void }) => void;
+  navigateBack?: (options: { delta: number; success: () => void; fail: () => void }) => void;
   getEnv?: (callback: (result: { miniprogram?: boolean }) => void) => void };
 let bridgePromise: Promise<MiniBridge | undefined> | undefined;
 export function miniPaymentBridge(): Promise<MiniBridge | undefined> {
@@ -39,11 +40,35 @@ export async function detectMiniPaymentContext(): Promise<boolean> {
   });
 }
 
-export async function openMiniRecharge(): Promise<boolean> {
+export async function openMiniWallet(currency: "CNY" | "USD" = "CNY"): Promise<boolean> {
+  try {
+    window.location.assign(`/ai-wallet?currency=${currency === "USD" ? "USD" : "CNY"}&mini=1#wallet-topup`);
+    return true;
+  } catch { return false; }
+}
+
+export async function returnToMiniTopup(): Promise<boolean> {
   const bridge = await miniPaymentBridge();
-  if (!bridge) return false;
+  if (!bridge?.navigateBack) return false;
   return new Promise(resolve => {
-    const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url: "/pages/balance/index", success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
+    const timeout = setTimeout(() => resolve(false), 3500);
+    const finish = (opened: boolean) => { clearTimeout(timeout); resolve(opened); };
+    try { bridge.navigateBack!({delta: 1, success: () => finish(true), fail: () => finish(false)}); }
+    catch { finish(false); }
   });
+}
+
+export function openMiniRecharge() { return openMiniWallet(); }
+
+export async function openMiniWechatTopup(amount:string|number):Promise<boolean>{
+ const value=String(amount).trim();
+ if(!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(value)||Number(value)<=0||Number(value)>10000)return false;
+ const bridge=await miniPaymentBridge();
+ if(!bridge)return false;
+ return new Promise(resolve=>{
+  const timer=setTimeout(()=>resolve(false),5000);
+  const finish=(opened:boolean)=>{clearTimeout(timer);resolve(opened)};
+  try{bridge.navigateTo({url:"/pages/cny-wallet/index?amount="+encodeURIComponent(value),success:()=>finish(true),fail:()=>finish(false)})}
+  catch{finish(false)}
+ });
 }

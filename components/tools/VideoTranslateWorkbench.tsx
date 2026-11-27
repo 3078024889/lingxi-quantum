@@ -1,4 +1,7 @@
 "use client";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {plainText} from "@/lib/tools/plain-copy";
+import FreeMediaActionButton from "@/components/tools/FreeMediaActionButton";
 import ToolUiText from "@/components/tools/ToolUiText";
 import {useEffect,useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -63,6 +66,7 @@ async function remoteTts(text:string,target:string,quoteId:string){
 function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=new Blob([text],{type:mime});return{name,blob:b,mime,size:b.size}}
 
 export default function VideoTranslateWorkbench(){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
  useEffect(()=>{let off=false;(async()=>{const ds=[] as number[];for(const f of files)ds.push(await localMediaDuration(f).catch(()=>60));if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
  const startedMinutes=useMemo(()=>durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0),[durations]);
@@ -117,7 +121,7 @@ export default function VideoTranslateWorkbench(){
     }
    }
    setVideos(vo);setSubs(so);setStage("全部视频翻译完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(plainText(lang,"fileError"));setStage("");throw e}
   finally{setBusy(false)}
  }
  return <div className="space-y-5">
@@ -150,7 +154,7 @@ export default function VideoTranslateWorkbench(){
    {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
   </section>}
 
-  {files.length>0&&targets.length>0&&<PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>}
+  {files.length>0&&targets.length>0&&(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"?<FreeMediaActionButton disabled={busy} onRun={()=>run("")}/>: <PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}

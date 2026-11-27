@@ -9,6 +9,9 @@ import PaidActionButton from "@/components/tools/PaidActionButton";
 import { localMediaDuration } from "@/lib/tools/autonomous/transcribe-local";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { createFfmpegRuntime } from "@/lib/tools/media/runtime";
+import { isFreeLocalAcceptanceTool } from "@/lib/tools/commerce/free-acceptance";
+
+const FREE_ACCEPTANCE = isFreeLocalAcceptanceTool("audio-cleanup");
 
 type Preset = "voice" | "noise" | "normalize" | "hum";
 
@@ -61,7 +64,7 @@ export default function AudioCleanupWorkbench() {
           };
 
           let code = await ffmpeg.exec([
-            "-i", input,
+            "-y", "-i", input,
             ...(previewOnly?["-t","30"]:[]),
             "-vn",
             "-af", filters[preset],
@@ -72,7 +75,7 @@ export default function AudioCleanupWorkbench() {
 
           if (code !== 0 && (preset === "voice" || preset === "noise")) {
             code = await ffmpeg.exec([
-              "-i", input,
+              "-y", "-i", input,
               ...(previewOnly?["-t","30"]:[]),
               "-vn",
               "-af", "highpass=f=80,lowpass=f=12000,dynaudnorm",
@@ -152,7 +155,25 @@ export default function AudioCleanupWorkbench() {
         <ToolUiText text="先试听降噪效果，再处理完整音频。强风、多人重叠说话或严重爆音可能无法完整恢复。" />
       </p>
 
-      <div className="flex flex-wrap gap-3"><button disabled={!files.length||busy} onClick={()=>void run(true)} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40"><ToolUiText text="免费试听前 30 秒" /></button>{files.length>0&&billableMinutes>0&&<PaidActionButton toolId="audio-cleanup" quantity={billableMinutes} draftReady={!busy} metadata={{minutes:billableMinutes,files:files.length,preset}} onPaid={()=>run(false)} label={`处理完整音频 · ${billableMinutes}个起始分钟`}/>}</div>{previewUrl&&<div className="rounded-xl border border-[var(--lx-line)] p-3"><div className="mb-2 text-xs text-[var(--lx-muted)]"><ToolUiText text="免费 30 秒试听，不提供试听文件导出。" /></div><audio controls src={previewUrl} className="w-full"/></div>}
+      <div className="flex flex-wrap gap-3">
+        <button type="button" disabled={!files.length||busy} onClick={()=>void run(true)}
+          className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40">
+          <ToolUiText text="免费试听前 30 秒" />
+        </button>
+        {FREE_ACCEPTANCE
+          ? <button type="button" disabled={!files.length||busy} onClick={()=>void run().catch(()=>{})}
+              data-testid="audio-cleanup-process"
+              className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">
+              <ToolUiText text="处理完整音频" />
+            </button>
+          : files.length>0&&billableMinutes>0&&<PaidActionButton toolId="audio-cleanup" quantity={billableMinutes}
+              draftReady={!busy} metadata={{minutes:billableMinutes,files:files.length,preset}} onPaid={()=>run()}
+              label={`处理完整音频 · ${billableMinutes}个起始分钟`}/>}
+      </div>
+      {previewUrl&&<div className="rounded-xl border border-[var(--lx-line)] p-3">
+        <div className="mb-2 text-xs text-[var(--lx-muted)]"><ToolUiText text="免费 30 秒试听，不提供试听文件导出。" /></div>
+        <audio controls src={previewUrl} className="w-full"/>
+      </div>}
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
 

@@ -1,28 +1,12 @@
-import{NextRequest,NextResponse}from"next/server";
-import{timingSafeEqual}from"node:crypto";
-import{runOneDetachedJob}from"@/lib/sasi/durable/detached-worker";
-
-export const runtime="nodejs";
-export const dynamic="force-dynamic";
-export const maxDuration=180;
-
-function safeEqual(a:string,b:string){
- const aa=Buffer.from(a),bb=Buffer.from(b);
- return aa.length===bb.length&&timingSafeEqual(aa,bb);
-}
-function authorized(req:NextRequest){
- const secret=String(process.env.SASI_WORKER_SECRET||"");
- if(secret.length<24)return false;
- const header=String(req.headers.get("authorization")||"");
- return safeEqual(header,`Bearer ${secret}`);
-}
-
-export async function POST(req:NextRequest){
- if(!authorized(req))return NextResponse.json({error:"NOT_FOUND"},{status:404});
- try{
-  const result=await runOneDetachedJob();
-  return NextResponse.json(result,{headers:{"Cache-Control":"no-store"}});
- }catch{
-  return NextResponse.json({error:"WORKER_TICK_FAILED"},{status:503,headers:{"Cache-Control":"no-store","Retry-After":"5"}});
- }
-}
+const retired = () => Response.json(
+  { error: "SASI_CREATION_RETIRED", replacement: "/sasi" },
+  { status: 410, headers: { "cache-control": "no-store" } }
+);
+const retiredHead = () => new Response(null, { status: 410, headers: { "cache-control": "no-store" } });
+export const GET = retired;
+export const POST = retired;
+export const PUT = retired;
+export const PATCH = retired;
+export const DELETE = retired;
+export const OPTIONS = retired;
+export const HEAD = retiredHead;

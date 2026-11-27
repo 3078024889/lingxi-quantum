@@ -18,7 +18,10 @@ function paypalOrderId(event:any){
 }
 
 export async function POST(req:Request){
+ const contentLength=Number(req.headers.get("content-length")||0);
+ if(Number.isFinite(contentLength)&&contentLength>512*1024)return NextResponse.json({error:"WEBHOOK_TOO_LARGE"},{status:413});
  const raw=await req.text();
+ if(Buffer.byteLength(raw,"utf8")>512*1024)return NextResponse.json({error:"WEBHOOK_TOO_LARGE"},{status:413});
  if(!(await verifyPaypalWebhook(req.headers,raw))){
   return NextResponse.json({error:"INVALID_PAYPAL_SIGNATURE"},{status:401});
  }
@@ -56,11 +59,12 @@ export async function POST(req:Request){
   if(!providerId)return NextResponse.json({ok:true,ignored:true});
   const admin=createAdminClient();
   const{data:order}=await admin.from("orders")
-   .select("id,amount_usd,status,provider,provider_payment_id")
+   .select("id,amount_usd,currency,status,provider,provider_payment_id")
    .eq("provider","paypal")
    .eq("provider_payment_id",providerId)
    .maybeSingle();
   if(!order)return NextResponse.json({ok:true,ignored:true});
+  if(order.currency!=="USD")return NextResponse.json({error:"CURRENCY_MISMATCH"},{status:422});
   if(order.status==="paid")return NextResponse.json({ok:true,alreadyPaid:true});
 
   await verifyPaypalCompletedOrder(providerId,Number(order.amount_usd),order.id);

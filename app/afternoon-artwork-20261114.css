@@ -1,0 +1,10 @@
+.lx-afternoon-art{display:inline-block;width:48px;height:48px;flex-shrink:0;background-image:url('/images/sasi/afternoon-icons-20261114.png');background-size:400% 200%;background-repeat:no-repeat;vertical-align:middle}
+.lx-afternoon-art[data-art-kind="chart"]{background-position:0 0}
+.lx-afternoon-art[data-art-kind="tools"]{background-position:33.333333% 0}
+.lx-afternoon-art[data-art-kind="layers"]{background-position:66.666667% 0}
+.lx-afternoon-art[data-art-kind="cart"]{background-position:100% 0}
+.lx-afternoon-art[data-art-kind="people"]{background-position:0 100%}
+.lx-afternoon-art[data-art-kind="shield"]{background-position:33.333333% 100%}
+.lx-afternoon-art[data-art-kind="seller"]{background-position:66.666667% 100%}
+.lx-afternoon-art[data-art-kind="coins"]{background-position:100% 100%}
+.lx-home-feature-icon>.lx-afternoon-art{width:100%;height:100%}

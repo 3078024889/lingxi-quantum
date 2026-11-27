@@ -1,0 +1,37 @@
+name: COM route and wallet read-only exact inventory (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-current-routes-wallet-readonly-20261108.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Check Cloudflare routes and wallet hosts without mutations
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CF_TOKEN"
+          base="https://api.cloudflare.com/client/v4"
+          temp="$(mktemp -d)"
+          trap 'rm -rf "$temp"' EXIT
+          curl -fsS --retry 2 --max-time 35 -H "Authorization: Bearer $CF_TOKEN" "$base/zones?name=lingxifield.com" -o "$temp/zones.json"
+          zone="$(jq -r '[.result[]|select(.name=="lingxifield.com" and .status=="active")|.id]|if length==1 then .[0] else empty end' "$temp/zones.json")"
+          test -n "$zone"
+          curl -fsS --retry 2 --max-time 35 -H "Authorization: Bearer $CF_TOKEN" "$base/zones/$zone/workers/routes" -o "$temp/routes.json"
+          jq -r '.result|sort_by(.pattern)[]|select(.pattern|test("lingxifield\\.com"))|"COM_ROUTE pattern="+.pattern+" script="+(.script//"NONE")' "$temp/routes.json"
+          for host in lingxifield.com lingxifield-com-next-20261108.3078024889.workers.dev lingxifield-com-unified-20261108.3078024889.workers.dev lingxifield-com-static-gateway-canary-20261107.3078024889.workers.dev;do
+            for path in /ai-wallet /sasi /api/health;do
+              for attempt in 1 2;do
+                status="$(curl -4sS --connect-timeout 8 --max-time 28 -o /dev/null -w '%{http_code}' "https://$host$path" || true)"
+                echo "COM_WALLET_HOST host=$host path=$path attempt=$attempt status=$status"
+              done
+            done
+          done
+          echo COM_READONLY_INVENTORY_COMPLETE

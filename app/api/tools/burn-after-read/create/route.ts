@@ -21,8 +21,23 @@ export async function POST(req:NextRequest){
  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
  const {data:{user}}=await createClient().auth.getUser(),admin=createAdminClient();
  const fingerprint=createHash('sha256').update(JSON.stringify({ciphertext,iv,ttl,mode,views,duration})).digest('hex');
+ const ipHash=foodRequestIpHash(req);
+ const createMetered=()=>admin.rpc("create_metered_burn_note",{
+  p_id:id,p_user_id:user?.id||null,p_ip_hash:ipHash,p_fingerprint:fingerprint,
+  p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
+ });
  let result;
- if(toolPassBackendReady()){
+ if(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"){
+  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+  // The reservation remains after destruction so retries cannot restore a consumed note.
+  const usageDay=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai'}).format(new Date());
+  const {error}=await admin.from("tool_export_requests").upsert({
+   id,tool_id:"burn-after-read",user_id:user.id,ip_hash:ipHash,usage_day:usageDay,
+   units:1,free_units:1,paid_units:0,state:"free",
+  },{onConflict:"id",ignoreDuplicates:true});
+  if(error)return NextResponse.json({error:"CREATE_FAILED"},{status:503});
+  result=await createMetered();
+ }else if(toolPassBackendReady()){
   if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
   if(body.accessRequestId){
    result=await admin.rpc("lingxi_create_pass_burn_note",{
@@ -37,16 +52,10 @@ export async function POST(req:NextRequest){
     .eq("user_id",user.id).eq("state","paid").maybeSingle();
    if(legacyError)return NextResponse.json({error:"CREATE_FAILED"},{status:503});
    if(!legacy)return NextResponse.json({error:"SINGLE_TOOL_CHECKOUT_RETIRED"},{status:410});
-   result=await admin.rpc("create_metered_burn_note",{
-    p_id:id,p_user_id:user.id,p_ip_hash:foodRequestIpHash(req),p_fingerprint:fingerprint,
-    p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
-   });
+   result=await createMetered();
   }
  }else{
-  result=await admin.rpc("create_metered_burn_note",{
-   p_id:id,p_user_id:user?.id||null,p_ip_hash:foodRequestIpHash(req),p_fingerprint:fingerprint,
-   p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
-  });
+  result=await createMetered();
  }
  if(result.error)return NextResponse.json({error:'CREATE_FAILED'},{status:result.error.message?.includes('EXPORT_REQUEST_MISMATCH')?409:503});
  const note=result.data as {state:string;id?:string;expires_at?:string}|null;

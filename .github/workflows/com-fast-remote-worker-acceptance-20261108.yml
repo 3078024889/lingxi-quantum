@@ -1,0 +1,51 @@
+name: COM fast remote-only live Worker acceptance (NO BUILD NO CUTOVER)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-fast-remote-worker-acceptance-20261108.yml']
+permissions: {contents: read}
+jobs:
+  canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - name: Verify full built worker actually reachable and static-edge guard
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base='https://lingxifield-com-main-20261108.3078024889.workers.dev'
+          for path in / /siai /tools /sasi /sasi/marketplace /announcements \
+            /api/health /api/pay/providers /api/sasi/software/catalog \
+            /api/sasi/marketplace/listings /en/siai /ja/siai;do
+            pass=0
+            for k in 1 2 3;do
+              hdr="$(mktemp)"
+              status="$(curl -4sS --connect-timeout 9 --max-time 28 -D "$hdr" -o /dev/null -w '%{http_code}' "$base$path" || true)"
+              echo "COM_PUBLIC_CANARY path=$path attempt=$k status=$status"
+              if [[ "$status" == 200 ]];then
+                if [[ "$path" != / && "$path" != /siai ]] || grep -iq '^x-lingxi-render-mode: static-edge-verified' "$hdr";then
+                  pass=$((pass+1))
+                fi
+              fi
+              rm -f "$hdr"
+              sleep 1
+            done
+            echo "COM_PUBLIC_CANARY_SUMMARY path=$path pass=$pass of_3"
+            test "$pass" = 3
+          done
+          for path in /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
+            st="$(curl -4sS --connect-timeout 9 --max-time 28 -o /dev/null -w '%{http_code}' "$base$path" || true)"
+            echo "COM_PRIVATE_AUTH_BOUNDARY path=$path HTTP_$st"
+            test "$st" = 401
+          done
+          for asset in /media/ffmpeg-0.12.10/ffmpeg-core.wasm \
+            /models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx;do
+            h="$(mktemp)"
+            st="$(curl -4sS --connect-timeout 9 --max-time 28 -D "$h" -o /dev/null -w '%{http_code}' \
+              -H 'Range: bytes=0-1023' "$base$asset" || true)"
+            echo "COM_PUBLIC_R2_RANGE path=$asset HTTP_$st"
+            test "$st" = 206
+            grep -iq '^content-range: bytes 0-1023/' "$h"
+            rm -f "$h"
+          done
+          echo 'FULL_REMOTE_WORKER_12_PUBLIC_3_PRIVATE_AND_R2_VERIFIED_NO_PRODUCTION_CUTOVER'

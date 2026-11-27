@@ -1,0 +1,56 @@
+name: COM Cloudflare route and commerce readiness diagnostic (READ ONLY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-live-readiness-20261108.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  route-inventory:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 7
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Read Cloudflare zones and current Worker production routes without mutations
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          base='https://api.cloudflare.com/client/v4'
+          hdr="$(mktemp)"
+          status="$(curl -sS --connect-timeout 9 --max-time 23 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -o "$hdr" -w '%{http_code}' "$base/zones?name=lingxifield.com")"
+          echo "CF_ZONES_READ_HTTP_$status"
+          zone=''
+          if [[ "$status" == 200 ]];then
+            zone="$(jq -r '.result[]?|select(.name=="lingxifield.com")|.id' "$hdr"|head -1)"
+            jq -c '{success,zones:[.result[]?|{name,status,paused,account_name:.account.name}]}' "$hdr"
+          else jq -c '{success,error_codes:[.errors[]?.code]}' "$hdr";fi
+          if [[ -n "$zone" ]];then
+            status="$(curl -sS --connect-timeout 9 --max-time 23 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o "$hdr" -w '%{http_code}' "$base/zones/$zone/workers/routes")"
+            echo "CF_WORKER_ROUTES_READ_HTTP_$status"
+            if [[ "$status" == 200 ]];then jq -c '{success,routes:[.result[]?|{pattern,script}]}' "$hdr";else jq -c '{success,error_codes:[.errors[]?.code]}' "$hdr";fi
+          fi
+          for ep in "/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lingxifield-com-main-20261108" \
+            "/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/lingxifield-com-public-r2-relay-20261108";do
+            status="$(curl -sS --connect-timeout 9 --max-time 23 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o "$hdr" -w '%{http_code}' "$base$ep")"
+            echo "CF_WORKER_SCRIPT_EXISTS $(basename "$ep") HTTP_$status"
+          done
+          rm -f "$hdr"
+      - name: Existing public .com live endpoints and anonymous boundary
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for p in / /tools /siai /sasi/marketplace /announcements /api/health \
+            /api/pay/providers /api/sasi/marketplace/listings \
+            /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders;do
+            status="$(curl -4sS --connect-timeout 8 --max-time 25 -o /dev/null -w '%{http_code}' "https://lingxifield.com$p" || true)"
+            echo "COM_LIVE_ROUTE:$p:HTTP_$status"
+          done
+          echo 'COM_PUBLIC_PROBE_NO_SITE_MODIFICATION'

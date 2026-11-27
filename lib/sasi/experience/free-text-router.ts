@@ -118,12 +118,12 @@ async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,tim
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
  // A healthy stream can take longer than its first token. Keep the shared
  // route deadline, but do not abort a progressing answer after twelve seconds.
- const firstTokenTimer=p.wire==='openai'?setTimeout(()=>controller.abort(),Math.min(12_000,timeoutMs)):undefined;
+ const firstTokenTimer=p.wire==='openai'&&onDelta?setTimeout(()=>controller.abort(),Math.min(12_000,timeoutMs)):undefined;
  const emit=(text:string)=>{if(text){clearTimeout(firstTokenTimer);onDelta?.(text)}};
  try{
   if(p.wire==="gemini"){const answer=await gemini(p,messages,maxTokens,controller.signal);emit?.(answer);return answer}
   if(p.wire==="cloudflare"){const answer=await cloudflare(p,messages,maxTokens,controller.signal);emit?.(answer);return answer}
-  return await openai(p,messages,maxTokens,controller.signal,emit);
+  return await openai(p,messages,maxTokens,controller.signal,onDelta?emit:undefined);
  }finally{clearTimeout(timer);clearTimeout(firstTokenTimer)}
 }
 
@@ -135,7 +135,7 @@ async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,tim
  * 4) 429/5xx/timeout -> provider cooldown + immediate next source
  * 5) bounded attempts; no provider failure is returned directly to the UI
  */
-export async function runExperienceText(input:{region:ExperienceRegion;task:ExperienceTask;messages:Message[];maxOutputTokens?:number;userId:string;sessionKey:string;onDelta?:(text:string)=>void;onReset?:()=>void}):Promise<ExperienceResult>{
+export async function runExperienceText(input:{region:ExperienceRegion;task:ExperienceTask;messages:Message[];maxOutputTokens?:number;userId:string;sessionKey:string;onDelta?:(text:string)=>void;onReset?:()=>void;validateText?:(text:string)=>void}):Promise<ExperienceResult>{
  const list=await candidates(input.region,input.task,input.userId,input.sessionKey);
  if(!list.length)throw new Error("EXPERIENCE_POOL_UNAVAILABLE");
  const maxTokens=Math.max(256,Math.min(4096,Number(input.maxOutputTokens||1536)));
@@ -149,9 +149,13 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
   if(hadPartial){input.onReset?.();hadPartial=false}
   attempts++;const started=Date.now();
   try{
-   const timeout=p.wire==='openai'?Math.max(5_000,remaining-1_000):Math.min(60_000,Math.max(5_000,remaining-1_000));
+   const timeout=p.wire==='openai'&&input.onDelta?Math.max(5_000,remaining-1_000):Math.min(60_000,Math.max(5_000,remaining-1_000));
    const text=await call(p,input.messages,maxTokens,timeout,input.onDelta?chunk=>{hadPartial=true;input.onDelta?.(chunk)}:undefined);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
+   try{input.validateText?.(text)}catch(error){
+    last=error;
+    continue;
+   }
    await setSessionAffinity(input.userId,input.sessionKey,p.id);
    return {text,providerId:p.id,model:p.model,attempts,estimatedTokens:tokens};
   }catch(e:any){

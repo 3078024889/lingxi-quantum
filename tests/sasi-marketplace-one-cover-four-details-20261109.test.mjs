@@ -1,0 +1,55 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const read=(path)=>readFileSync(path,"utf8");
+test("media policy is one main cover and up to four optional details, not eight images",()=>{
+ const r2=read("lib/sasi-marketplace/r2.ts");
+ const ticket=read("app/api/sasi/marketplace/image-ticket/route.ts");
+ const migration=read("supabase/migrations/20261109030000_sasi_market_one_cover_four_details.sql");
+ assert.match(r2,/MARKET_MEDIA_COVER_LIMIT=1/);
+ assert.match(r2,/MARKET_MEDIA_DETAIL_LIMIT=4/);
+ assert.match(ticket,/ONE_COVER_MAX/);
+ assert.match(ticket,/FOUR_DETAILS_MAX/);
+ assert.match(ticket,/MARKET_MEDIA_COVER_LIMIT:MARKET_MEDIA_DETAIL_LIMIT/);
+ assert.match(ticket,/neq\("status","rejected"\)/);
+ assert.match(migration,/pg_advisory_xact_lock/);
+ assert.match(migration,/slot_limit := CASE WHEN NEW.kind='cover' THEN 1 ELSE 4 END/);
+ assert.match(migration,/SECURITY DEFINER SET search_path = ''/);
+ assert.match(migration,/REVOKE ALL ON FUNCTION public\.sasi_market_limit_media_slots\(\) FROM PUBLIC,anon,authenticated/);
+ assert.doesNotMatch(migration,/DELETE FROM|TRUNCATE /);
+});
+test("public showcase uses only approved single cover and gives hover/focus previews",()=>{
+ const page=read("components/SasiOpenMarketplace.tsx");
+ const style=read("components/SasiOpenMarketplace.module.css");
+ assert.match(page,/photo\.kind==="cover"/);
+ assert.match(page,/styles\.quickPreview/);
+ assert.match(page,/slice\(0,260\)/);
+ assert.match(page,/mediaCounts/);
+ assert.match(page,/my-media\?listingIds/);
+ assert.match(page,/详情图（可选，最多4张）/);
+ assert.match(style,/\.main \.card:is\(:hover,:focus-within\)/);
+ assert.match(style,/\.quickPreview\{/);
+ assert.doesNotMatch(page,/4张主图|four cover images/i);
+});
+test("detail has one main cover, optional four detail images, real product text and expandable content",()=>{
+ const page=read("components/SasiMarketplaceProductDetail.tsx");
+ const style=read("components/SasiMarketplaceProductDetail.module.css");
+ assert.match(page,/photos\.find\(p=>p\.kind==="cover"\)/);
+ assert.match(page,/photos\.filter\(p=>p\.kind==="detail"\)\.slice\(0,4\)/);
+ assert.match(page,/descriptionOpen/);
+ assert.match(page,/aria-expanded=\{descriptionOpen\}/);
+ assert.match(page,/Show more/);
+ assert.match(page,/fullDescription/);
+ assert.match(page,/\/api\/sasi\/marketplace\/product\?/);
+ assert.match(page,/\/api\/sasi\/marketplace\/images\?/);
+ assert.match(style,/white-space:pre-wrap/);
+ assert.doesNotMatch(page,/1,268|4\.9\s*\(|demo order/i);
+});
+test("seller private count endpoint never returns storage keys and binds seller id",()=>{
+ const api=read("app/api/sasi/marketplace/my-media/route.ts");
+ assert.match(api,/auth\.getUser\(\)/);
+ assert.match(api,/eq\("seller_id",user\.id\)/);
+ assert.match(api,/\.in\("listing_id",ids\)/);
+ assert.match(api,/Cache-Control":"private,no-store/);
+ assert.doesNotMatch(api,/object_key|uploadUrl|signedMarketplaceDownload/);
+});

@@ -1,0 +1,57 @@
+name: COM real production desktop/mobile chromium SASI and tools smoke
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-production-chromium-20261108.yml']
+permissions: {contents: read}
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Browser and pinned dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
+      - name: Actually open production SASI, rankings and tools on desktop and mobile
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {chromium} from "playwright";
+          const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
+          const target="https://lingxifield.com";
+          let total=0;
+          try{
+            for(const profile of [{name:"desktop",width:1440,height:900},{name:"mobile",width:390,height:844}]){
+              const ctx=await browser.newContext({viewport:{width:profile.width,height:profile.height},locale:"zh-CN"});
+              const page=await ctx.newPage();
+              const serverErrors=[];
+              page.on("response",resp=>{
+                if(resp.url().startsWith(target)&&resp.status()>=500)serverErrors.push({url:new URL(resp.url()).pathname,status:resp.status()});
+              });
+              for(const path of ["/","/tools","/siai","/sasi","/sasi/marketplace","/announcements","/tools/pdf-compress"]){
+                let response=await page.goto(target+path,{waitUntil:"domcontentloaded",timeout:60000});
+                if(response?.status()!==200)throw Error("LIVE_BROWSER_PAGE_STATUS "+profile.name+" "+path+" "+response?.status());
+                await page.locator("body").waitFor({state:"visible",timeout:15000});
+                const bodyText=(await page.locator("body").innerText()).trim();
+                const count=bodyText.length;
+                console.log("COM_BROWSER_VISIBLE profile="+profile.name+" path="+path+" textChars="+count);
+                if(count<140)throw Error("LIVE_BROWSER_EMPTY_OR_BROKEN "+profile.name+" "+path);
+                if(path==="/sasi" && !/2,888|2888/.test(bodyText))throw Error("SASI_FIRST_PARTY_PRICE_NOT_VISIBLE");
+                if(path==="/sasi/marketplace" && !bodyText.includes("15%"))throw Error("SASI_SELLER_FEE_NOT_VISIBLE");
+                total++;
+              }
+              console.log("COM_BROWSER_HTTP_5XX_OBSERVED profile="+profile.name+" records="+JSON.stringify(serverErrors.slice(0,20)));
+              await ctx.close();
+            }
+            console.log("COM_PRODUCTION_REAL_CHROMIUM_DESKTOP_MOBILE_PASS total="+total);
+          }finally{await browser.close()}
+          NODE

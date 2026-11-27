@@ -24,7 +24,8 @@ const catalog = [...globalSeo.slice(start,end).matchAll(
   /\{slug:"([^"]+)",zh:"([^"]+)",en:"([^"]+)",mode:"([^"]+)"/g
 )].map(m => ({slug:m[1],zh:m[2],en:m[3],mode:m[4]}));
 
-const unique = [...new Map(catalog.map(x => [x.slug,x])).values()];
+const unique = [...new Map(catalog.filter(x => x.slug !== "image-to-pdf-pro").map(x => [x.slug,x])).values()];
+const toolEntryPoints = unique.length + 1; // /tools directory plus unique tool detail entries.
 
 const faqKeys = [...faq.matchAll(/^\s*"([^"]+)":\s*\{/gm)].map(m => m[1]);
 const curated = new Set(faqKeys);
@@ -62,6 +63,7 @@ const payload = {
   source: "LINGXIFIELD SEO search-intent catalog",
   note: "Generic questions describe common task intent. Curated FAQ pages are manually authored; this file does not claim private search-volume data.",
   tools: unique.length,
+  toolEntryPoints,
   locales: localeMeta.length,
   records
 };
@@ -71,8 +73,12 @@ fs.writeFileSync(path.join(outDir,"search-intent-index.json"), JSON.stringify(pa
 const lines = [
   "# LINGXIFIELD LLM / AI SEARCH INDEX",
   "",
+  "## 核心搜索主题",
+  "全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台",
+  "",
   `Generated: ${payload.generatedAt}`,
   `Tools: ${unique.length}`,
+  `Tool entry points: ${toolEntryPoints} (the /tools directory plus unique tool detail entries)`,
   `Locales: ${localeMeta.length}`,
   "",
   "This machine-readable index maps public tool pages to languages, processing modes and common task-intent questions.",
@@ -80,11 +86,67 @@ const lines = [
   "",
   "## Primary pages",
   "- https://lingxifield.com/tools",
+  "- https://lingxifield.com/discoveries",
+  "- https://lingxifield.com/siai",
+  "- https://lingxifield.cn/siai",
   "- https://lingxifield.com/sasi",
+  "- https://lingxifield.com/sasi/seller",
+  "- https://lingxifield.com/sasi/delivery",
+  "- https://lingxifield.com/tools/pass",
   "- https://lingxifield.com/products",
+  "- https://lingxifield.com/partners",
+  "- https://lingxifield.com/siai-openapi.json",
+  "- https://lingxifield.com/siai/updates.xml",
+  "- https://lingxifield.com/widgets/lingxifield-v1.js",
+  "- https://lingxifield.com/downloads/lingxifield-siai-wordpress.zip",
+  ...localeMeta.filter(([locale])=>locale!=="zh").map(([locale])=>`- https://lingxifield.com/${locale}/discoveries`),
   "",
   "## Tool index"
 ];
+
+
+const topicStart = globalSeo.indexOf("export const SEO_TOPICS={");
+const topicEnd = globalSeo.indexOf("} as const", topicStart);
+if (topicStart < 0 || topicEnd < 0) throw new Error("SEO_TOPICS_NOT_FOUND");
+const sasiTopics = [...globalSeo.slice(topicStart, topicEnd).matchAll(/"([^"]+)":\{zh:"([^"]+)",en:"([^"]+)"/g)]
+  .map(m => ({slug:m[1],zh:m[2],en:m[3]}));
+if (sasiTopics.length !== 4) throw new Error("SASI_SEO_TOPIC_COUNT_MISMATCH");
+const topicIndex = lines.indexOf("## Tool index");
+const topicLines = [];
+for (const topic of sasiTopics) {
+  topicLines.push(`- ${topic.en} | ${topic.zh}: https://lingxifield.com/discover/${topic.slug}`);
+  for (const [locale] of localeMeta) {
+    if (locale === "zh") continue;
+    topicLines.push(`  - ${locale}: https://lingxifield.com/${locale}/discover/${topic.slug}`);
+  }
+}
+lines.splice(topicIndex,0,
+  "",
+  "## Global AI / SI / SIAI rankings",
+  "- Global SIAI directory: https://lingxifield.com/siai",
+  "- China regional SIAI entry: https://lingxifield.cn/siai",
+  "",
+  "## SASI Software Marketplace",
+  ...topicLines,
+  "",
+  "## Evidence-led discoveries and content",
+  "- https://lingxifield.com/discoveries | Voynich Manuscript and public NASA/AARO UAP records; separates documented facts, unresolved questions and speculation.",
+  "- Localized discovery pages: "+localeMeta.filter(([locale])=>locale!=="zh").map(([locale])=>`https://lingxifield.com/${locale}/discoveries`).join(" · "),
+  "- Related workflows: PDF text extraction, document translation, PDF comparison, image OCR and measured Before / After compression.",
+  "",
+  "## Partner distribution and integrations",
+  "- Partner portal: https://lingxifield.com/partners",
+  "- JavaScript widget: https://lingxifield.com/widgets/lingxifield-v1.js",
+  "- WordPress plugin: https://lingxifield.com/downloads/lingxifield-siai-wordpress.zip",
+  "- Read-only SIAI OpenAPI: https://lingxifield.com/siai-openapi.json",
+  "- SIAI updates RSS: https://lingxifield.com/siai/updates.xml",
+  "- Public share links carry bounded attribution labels only; private files, prompts and account identifiers are not placed in URLs.",
+  "",
+  "## Value-first tool and membership model",
+  "- Free tools let visitors complete a first task and verify the output before choosing a paid plan.",
+  "- ToolPass supports recurring use, multiple files and sustained workflows across the practical-tool catalog.",
+  "- The platform does not subsidize unpredictable third-party model-token costs; paid processing and applicable API costs must be disclosed before execution."
+);
 
 for (const tool of unique) {
   lines.push(`- ${tool.slug} | ${tool.zh} | ${tool.en} | ${tool.mode}`);
@@ -102,4 +164,4 @@ lines.push("- The public site remains the source of truth for tool behavior, lim
 lines.push("");
 
 fs.writeFileSync(path.join(outDir,"llms-full.txt"), lines.join("\n"), "utf8");
-console.log(`GENERATE_PASS tools=${unique.length} locales=${localeMeta.length}`);
+console.log(`GENERATE_PASS tools=${unique.length} entryPoints=${toolEntryPoints} locales=${localeMeta.length}`);

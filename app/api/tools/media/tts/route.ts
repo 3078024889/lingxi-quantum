@@ -1,3 +1,4 @@
+import {authorizeFreeMediaAcceptance} from "@/lib/tools/media/free-acceptance";
 import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import{NextRequest,NextResponse}from"next/server";
 import{isSameOriginMutation}from"@/lib/sasi/request-security";
@@ -12,10 +13,14 @@ export async function POST(req:NextRequest){
   const allowed=["video-dubbing","video-translate"];
   const toolSlug=String(b.toolSlug||"video-dubbing");
   if(!allowed.includes(toolSlug))return NextResponse.json({error:"INVALID_TOOL"},{status:400});
+  const free=await authorizeFreeMediaAcceptance(req,toolSlug);
+  if(free&&!free.ok)return NextResponse.json({error:free.error},{status:free.status});
+  if(!free){
   const stage=await authorizeToolPassStage({toolSlug,stage:"media-tts",
     accessRequestId:b.accessRequestId,operationId:b.operationId});
   if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
   if(stage.mode==="legacy")await requirePaidMediaQuote(quoteId,allowed,{stage:"media-tts",characters:text.length,operationId:b.stageCallId});
+  }
   const audio=await synthesizeRemote(text,String(b.language||"en"));
   return new NextResponse(new Uint8Array(audio),{headers:{"content-type":"audio/mpeg","cache-control":"private, no-store"}});
  }catch(e){

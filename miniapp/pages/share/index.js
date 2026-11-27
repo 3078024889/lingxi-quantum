@@ -8,7 +8,7 @@ Page({
   p=publicWebPath(p)
   let title='灵犀场 LINGXIFIELD';try{if(options.title)title=decodeURIComponent(options.title).slice(0,100)}catch(_){}
   this.setData({title,webPath:p,webUrl:`${SITE}${p}`})
-  enableShareMenu()
+  enableShareMenu({includeTimeline:true})
  },
  copyLink(){wx.setClipboardData({data:this.data.webUrl})},
  open(){wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent(this.data.webPath),fail(){wx.showToast({title:'请点底部“前往小程序”打开',icon:'none'})}})},
