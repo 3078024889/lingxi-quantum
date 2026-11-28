@@ -1,4 +1,5 @@
 "use client";
+import MediaTrimPreview from "./MediaTrimPreview";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
@@ -26,6 +27,8 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>videoUiText(lang,zh,en);
  const[files,setFiles]=useState<File[]>([]),[mode,setMode]=useState<Mode>(initialMode),[start,setStart]=useState(0),[duration,setDuration]=useState(30),[preset,setPreset]=useState<CompressPreset>("balanced"),[resolution,setResolution]=useState<Resolution>("source"),[fps,setFps]=useState(0),[rotation,setRotation]=useState<"90"|"180"|"270">("90"),[speed,setSpeed]=useState(1),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]);
  const ff=useRef<any>(null);
+ const generation=useRef(0);
+ useEffect(()=>()=>{generation.current++;try{ff.current?.terminate()}catch{}ff.current=null},[]);
  const[compressionNotices,setCompressionNotices]=useState({original:false,larger:false});
 
  function videoFilters(extra:string[]=[]){
@@ -35,23 +38,23 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
   return filters;
  }
  async function run(){
-  if(!files.length)return;setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);setCompressionNotices({original:false,larger:false});
+  if(!files.length||busy)return;const runId=++generation.current;let running:any=null;const check=()=>{if(generation.current!==runId)throw Error("MEDIA_CANCELLED")};setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);setCompressionNotices({original:false,larger:false});
   try{
    const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
-   const out:ToolResultFile[]=[];let originalKept=false,largerTransformed=false;
+   check();const out:ToolResultFile[]=[];let originalKept=false,largerTransformed=false;
    for(let i=0;i<files.length;i++){
-    const file=files[i],f=new FFmpeg();ff.current=f;
-    f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
+    check();const file=files[i],f=new FFmpeg();running=f;ff.current=f;
+    f.on("progress",({progress}:{progress:number})=>{if(generation.current===runId)setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`)});
     await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
-    const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
+    check();const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
-    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
+    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();if(ff.current===f)ff.current=null;continue}
     const base=["-i",input];
     if(mode==="compress"){
       const filters=videoFilters();args=[...base,...(filters.length?["-vf",filters.join(",")]:[]),"-c:v","libx264","-preset","veryfast","-crf",String(CRF[preset]),"-c:a","aac","-b:a",preset==="small"?"96k":"128k",output];name=`${stem}-compressed.mp4`;
     }
     if(mode==="trim"){
-      const filters=videoFilters();args=["-ss",String(Math.max(0,start)),"-i",input,"-t",String(Math.max(1,duration)),...(filters.length?["-vf",filters.join(",")]:[]),"-c:v","libx264","-preset","veryfast","-c:a","aac",output];name=`${stem}-trimmed.mp4`;
+      const filters=videoFilters();args=["-ss",String(Math.max(0,start)),"-i",input,"-t",String(Math.max(.05,duration)),...(filters.length?["-vf",filters.join(",")]:[]),"-c:v","libx264","-preset","veryfast","-c:a","aac",output];name=`${stem}-trimmed.mp4`;
     }
     if(mode==="mute"){
       const filters=videoFilters();args=[...base,...(filters.length?["-vf",filters.join(",")]:[]),"-an","-c:v","libx264","-preset","veryfast",output];name=`${stem}-muted.mp4`;
@@ -78,12 +81,12 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
       out.push({name,blob,mime:"video/mp4",size:blob.size});
      }
     }else out.push({name,blob,mime:"video/mp4",size:blob.size});
-    try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();ff.current=null;
+    try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();if(ff.current===f)ff.current=null;
    }
-   setOutputs(out);setCompressionNotices({original:originalKept,larger:largerTransformed});setStage(plainText(lang,"ready"));
-  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(plainText(lang,"fileError"))}finally{setBusy(false)}
+   check();setOutputs(out);setCompressionNotices({original:originalKept,larger:largerTransformed});setStage(plainText(lang,"ready"));
+  }catch(e){try{running?.terminate()}catch{}if(generation.current===runId){ff.current=null;setStage("");setError(plainText(lang,"fileError"))}}finally{if(generation.current===runId)setBusy(false)}
  }
- function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
+ function cancel(){generation.current++;try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){
   try{
    const toolSlug=toolSlugFromPathname(location.pathname);
@@ -96,9 +99,14 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  return <div data-video-toolkit data-hydrated={hydrated ? "true" : "false"} className="space-y-4">
   <FileDropzone accept="video/*,audio/*" multiple maxFiles={10} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setError("")}} disabled={busy||!hydrated} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy||!hydrated}/>
-  {!standalone&&<div className="flex flex-wrap gap-2">{modes.map(([v,n])=><button type="button" key={v} disabled={!hydrated} aria-pressed={mode===v} onClick={()=>setMode(v)} className={`rounded-full border px-4 py-2 text-sm ${mode===v?"border-[var(--lx-line-strong)] bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{n}</button>)}</div>}
+  {!standalone&&<div className="flex flex-wrap gap-2">{modes.map(([v,n])=><button type="button" key={v} disabled={busy||!hydrated} aria-pressed={mode===v} onClick={()=>{setMode(v);setOutputs([]);setError("")}} className={`rounded-full border px-4 py-2 text-sm ${mode===v?"border-[var(--lx-line-strong)] bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{n}</button>)}</div>}
   {mode==="compress"&&<label className="block text-sm text-[var(--lx-muted)]">{t("压缩强度","Compression")}<select value={preset} onChange={e=>setPreset(e.target.value as CompressPreset)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="high">{t("高清","High quality")}</option><option value="balanced">{t("均衡","Balanced")}</option><option value="small">{t("更小体积","Smaller file")}</option></select></label>}
-  {mode==="trim"&&<div className="grid gap-3 sm:grid-cols-2"><label className="text-sm text-[var(--lx-muted)]">{t("开始秒数","Start second")}<EditableNumberInput type="number" min={0} value={start} onChange={e=>setStart(Math.max(0,Number(e.target.value)))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label><label className="text-sm text-[var(--lx-muted)]">{t("截取时长（秒）","Duration")}<EditableNumberInput type="number" min={1} value={duration} onChange={e=>setDuration(Math.max(1,Number(e.target.value)))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label></div>}
+  {mode==="trim"&&<>
+   {files.length>1&&<p className="text-sm text-[var(--lx-muted)]">{t("预览第一段视频；所选时段会用于每个文件。","Previewing the first video. The selected time range applies to every file.")}</p>}
+   {files[0]&&<MediaTrimPreview file={files[0]} start={start} duration={duration} disabled={busy} lang={lang} onChange={(next,length)=>{setStart(next);setDuration(length);setOutputs([])}}/>}
+   <details className="rounded-xl border border-[var(--lx-line)] p-3"><summary className="cursor-pointer text-sm">{t("精确时间（可选）","Precise times (optional)")}</summary>  <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm text-[var(--lx-muted)]">{t("开始秒数","Start second")}<EditableNumberInput type="number" min={0} step={.05} disabled={busy} value={start} onChange={e=>{setStart(Math.max(0,Number(e.target.value)));setOutputs([])}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label><label className="text-sm text-[var(--lx-muted)]">{t("截取时长（秒）","Duration")}<EditableNumberInput type="number" min={.05} step={.05} disabled={busy} value={duration} onChange={e=>{setDuration(Math.max(.05,Number(e.target.value)));setOutputs([])}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label></div></details>
+  </>}
+
   {mode==="rotate"&&<label className="block text-sm text-[var(--lx-muted)]">{t("旋转角度","Rotation")}<select value={rotation} onChange={e=>setRotation(e.target.value as any)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="90">{t("顺时针 90°","90° clockwise")}</option><option value="180">{t("旋转 180°","180°")}</option><option value="270">{t("逆时针 90°","90° counterclockwise")}</option></select></label>}
   {mode==="speed"&&<label className="block text-sm text-[var(--lx-muted)]">{t("播放速度","Playback speed")} {speed.toFixed(2)}×<input className="mt-2 w-full" type="range" min={.5} max={2} step={.05} value={speed} onChange={e=>setSpeed(Number(e.target.value))}/></label>}
   {mode!=="audio"&&<div className="grid gap-3 sm:grid-cols-2"><label className="text-sm text-[var(--lx-muted)]">{t("输出分辨率","Output resolution")}<select value={resolution} onChange={e=>setResolution(e.target.value as Resolution)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="source">{t("保持原尺寸","Keep source")}</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option></select></label><label className="text-sm text-[var(--lx-muted)]">{t("输出帧率（0=保持原帧率）","FPS (0 = keep source)")}<EditableNumberInput type="number" min={0} max={120} value={fps} onChange={e=>setFps(Math.max(0,Math.min(120,Number(e.target.value))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label></div>}

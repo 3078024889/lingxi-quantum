@@ -9,7 +9,6 @@ import ResultFileActions from './ResultFileActions';
 import {useLingxiLang} from '@/lib/lingxi-i18n';
 import {plainText} from '@/lib/tools/plain-copy';
 import {translateSubtitleLocal} from '@/lib/tools/autonomous/subtitle-local';
-import {translateSubtitleOnline} from '@/lib/tools/autonomous/subtitle-online';
 import {downloadBlob} from '@/lib/tools/shared/download';
 import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from '@/lib/tools/workspace/paid-task-draft';
 const COPY={
@@ -26,30 +25,21 @@ const COPY={
 const LANGS={zh:'中文',en:'English',ja:'日本語',ko:'한국어',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ar:'العربية'};
 export default function SubtitleTranslateWorkbench(){
  const {lang}=useLingxiLang(),c=COPY[lang];
- const [files,setFiles]=useState<File[]>([]),[target,setTarget]=useState('en'),[source,setSource]=useState('zh'),[busy,setBusy]=useState(false),[out,setOut]=useState(''),[name,setName]=useState('translated.srt'),[charCount,setCharCount]=useState(0),[error,setError]=useState(''),[draftId,setDraftId]=useState(''),[draftReady,setDraftReady]=useState(false),[restored,setRestored]=useState(false),[online,setOnline]=useState(true),[native,setNative]=useState(false),[needsLogin,setNeedsLogin]=useState(false),[delivered,setDelivered]=useState<{blob:Blob;name:string}|null>(null);
+ const [files,setFiles]=useState<File[]>([]),[target,setTarget]=useState('en'),[source,setSource]=useState('zh'),[busy,setBusy]=useState(false),[out,setOut]=useState(''),[name,setName]=useState('translated.srt'),[charCount,setCharCount]=useState(0),[error,setError]=useState(''),[draftId,setDraftId]=useState(''),[draftReady,setDraftReady]=useState(false),[restored,setRestored]=useState(false),[needsLogin,setNeedsLogin]=useState(false),[delivered,setDelivered]=useState<{blob:Blob;name:string}|null>(null);
  const active=useRef<AbortController|null>(null);
- useEffect(()=>{const supported=Boolean((globalThis as any).Translator?.create);setNative(supported);setOnline(!supported);const id=new URLSearchParams(location.search).get('resumeDraft');if(!id){setRestored(true);return}void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId==='subtitle-translate'){setFiles(draftFiles(d).slice(0,1));setDraftId(id);setSource(d.state?.source||'zh');setTarget(d.state?.target||'en');setOut(d.state?.out||'');setName(d.state?.name||'translated.srt');setCharCount(Number(d.state?.charCount||0));setOnline(d.state?.online??!supported)}setRestored(true)}).catch(()=>{setRestored(true);setError(c[2])});return()=>active.current?.abort()},[]);
- async function persist(){if(!files[0]||!draftId)throw Error('NO_SUBTITLE_DRAFT');await savePaidTaskDraft({id:draftId,toolId:'subtitle-translate',files:files.slice(0,1),state:{source,target,out,name,charCount,online}})}
- useEffect(()=>{setDraftReady(false);if(!restored||!files[0]||!draftId)return;let live=true;const timer=setTimeout(()=>{void persist().then(()=>{if(live)setDraftReady(true)}).catch(()=>{if(live)setError(c[2])})},120);return()=>{live=false;clearTimeout(timer)}},[files,source,target,out,name,charCount,draftId,restored,online]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get('resumeDraft');if(!id){setRestored(true);return}void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId==='subtitle-translate'){setFiles(draftFiles(d).slice(0,1));setDraftId(id);setSource(d.state?.source||'zh');setTarget(d.state?.target||'en');setOut(d.state?.out||'');setName(d.state?.name||'translated.srt');setCharCount(Number(d.state?.charCount||0));}setRestored(true)}).catch(()=>{setRestored(true);setError(c[2])});return()=>active.current?.abort()},[]);
+ async function persist(){if(!files[0]||!draftId)throw Error('NO_SUBTITLE_DRAFT');await savePaidTaskDraft({id:draftId,toolId:'subtitle-translate',files:files.slice(0,1),state:{source,target,out,name,charCount,online:false}})}
+ useEffect(()=>{setDraftReady(false);if(!restored||!files[0]||!draftId)return;let live=true;const timer=setTimeout(()=>{void persist().then(()=>{if(live)setDraftReady(true)}).catch(()=>{if(live)setError(c[2])})},120);return()=>{live=false;clearTimeout(timer)}},[files,source,target,out,name,charCount,draftId,restored]);
  async function run(){if(!files[0]||busy)return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setOut('');setNeedsLogin(false);try{const text=await files[0].text();setCharCount(text.length);let translated:string;
-   if(online)translated=await translateSubtitleOnline(text,target,source,controller.signal);
-   else{
-    try{translated=await translateSubtitleLocal(text,target,source,controller.signal)}
-    catch(error){
-     controller.signal.throwIfAborted();
-     if(!(error instanceof Error)||!/^LOCAL_/.test(error.message))throw error;
-     setOnline(true);
-     translated=await translateSubtitleOnline(text,target,source,controller.signal);
-    }
-   }controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
+   translated=await translateSubtitleLocal(text,target,source,controller.signal);
+   controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
  async function exportPaid(){if(!out)throw Error('SUBTITLE_RESULT_MISSING');const blob=new Blob([out],{type:name.toLowerCase().endsWith('.vtt')?'text/vtt':'application/x-subrip'});await downloadBlob(blob,name);setDelivered({blob,name})}
  return <div className="space-y-4">
   {delivered&&<ResultFileActions blob={delivered.blob} name={delivered.name}/>}
   <FileDropzone accept=".srt,.vtt,text/plain" files={files} normalizeDocuments={false} maxSizeMB={1} onChange={n=>{setFiles(n.slice(0,1));setOut('');setCharCount(0);setError('');setDraftId(n[0]?newPaidTaskDraftId():'')}} disabled={busy||!restored} kind="subtitle"/>
   <div className="grid gap-3 sm:grid-cols-2">{([['原语言',source,(v:string)=>{setSource(v);setOut('')}],['目标语言',target,(v:string)=>{setTarget(v);setOut('')}]] as const).map(([label,value,change])=><label className="text-sm" key={label}><ToolUiText text={label}/><select disabled={busy} value={value} onChange={e=>change(e.target.value)} className="ml-2 rounded-xl border px-3 py-2">{Object.entries(LANGS).map(([id,name])=><option value={id} key={id}>{name}</option>)}</select></label>)}</div>
-  {native&&<label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={online} disabled={busy} onChange={e=>{setOnline(e.target.checked);setOut('')}}/>{c[5]}</label>}
-  {online&&<p className="text-sm text-[var(--lx-muted)]">{c[1]}</p>}
-  {files.length>0&&<button disabled={busy} onClick={()=>void run()} className="rounded-xl border px-4 py-2">{busy?plainText(lang,'working'):online?c[0]:<ToolUiText text="先免费生成翻译预览"/>}</button>}
+  <p className="text-sm text-[var(--lx-muted)]">{lang==='zh'?'字幕文字在你的设备上翻译，不上传文字。首次使用需要下载语言包；翻译后可先查看内容再保存。':'Subtitle text is translated on your device. Language packs download on first use. Review the translation before saving.'}</p>
+  {files.length>0&&<button disabled={busy} onClick={()=>void run()} className="rounded-xl border px-4 py-2">{busy?plainText(lang,'working'):<ToolUiText text="开始翻译"/>}</button>}
   {busy&&<button onClick={()=>active.current?.abort()} className="ml-2 rounded-xl border px-4 py-2"><ToolUiText text="取消"/></button>}
   {out&&<>
    <textarea aria-label={plainText(lang,"text")} value={out} readOnly rows={12} className="w-full rounded-2xl border bg-[var(--lx-soft)] p-4 text-sm"/>
