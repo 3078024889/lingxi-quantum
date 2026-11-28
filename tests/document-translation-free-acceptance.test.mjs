@@ -73,7 +73,7 @@ test('free acceptance allows repeated document and subtitle uploads without allo
     return compile('../lib/tools/commerce/tool-start-client.ts',{'./free-acceptance':acceptance},env);
   }
   const free=client('true');
-  for(const tool of ['document-translate','subtitle-translate']){
+  for(const tool of ['document-translate','subtitle-translate','image-translator','video-translate','video-dubbing']){
     for(const requestId of ['first','second']){
       const result=await free.claimToolStart(tool,1,requestId);
       assert.equal(result.ok,true);
@@ -85,13 +85,13 @@ test('free acceptance allows repeated document and subtitle uploads without allo
 });
 
 test('local translation acceptance includes saving and sharing, while normal export remains gated',async()=>{
- for(const flag of ['true','false']){
+ for(const flag of ['true','false'])for(const tool of ['document-translate','image-translator','video-translate','video-dubbing']){
   const runtime={process:{env:{NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE:flag}}};
   const acceptance=compile('../lib/tools/commerce/free-acceptance.ts',{'../advanced-catalog':{ADVANCED_TOOLS:[]},'../registry':{getTool:()=>undefined}},runtime);
   const client=compile('../lib/tools/commerce/export-access-client.ts',{
    './free-acceptance':acceptance,'./metered-catalog':{isMeteredTool:()=>true,isMeteredOperationTool:()=>false},
    './tool-start-client':{TOOL_PASS_ENFORCED:false},'./tool-route-slug':{toolSlugFromPathname:path=>path.split('/').pop()},
-  },{...runtime,location:{pathname:'/tools/document-translate'},WeakMap,crypto:{randomUUID:()=> 'fixture'}});
+  },{...runtime,location:{pathname:'/tools/'+tool},WeakMap,crypto:{randomUUID:()=> 'fixture'}});
   const blob={};
   if(flag==='true'){
    await client.ensureToolExportAccess(blob,'translation.docx','save');
