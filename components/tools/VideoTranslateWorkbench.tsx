@@ -1,4 +1,6 @@
 "use client";
+import {createLocalTranslator,translateWithGlossary} from '@/lib/tools/autonomous/translation-local';
+import {synthesizeLocal} from '@/lib/tools/autonomous/speech-local';
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {plainText} from "@/lib/tools/plain-copy";
 import FreeMediaActionButton from "@/components/tools/FreeMediaActionButton";
@@ -10,8 +12,7 @@ import PaidActionButton from "@/components/tools/PaidActionButton";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
-import {extractCompactAudio} from "@/lib/tools/media/client";
-import {concatMp3,muxTranslatedVideo,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
+import {muxTranslatedVideo,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[
@@ -21,47 +22,18 @@ const LANGS=[
 type Target=typeof LANGS[number][0];
 type Mode="subtitle"|"dub";
 
-function chunks<T>(items:T[],n:number){const out:T[][]=[];for(let i=0;i<items.length;i+=n)out.push(items.slice(i,i+n));return out}
-function marker(i:number){return `⟦LX${String(i).padStart(4,"0")}⟧`}
-function splitTts(text:string,max=10500){
- const parts:string[]=[];let cur="";
- for(const piece of text.split(/(?<=[。！？.!?])\s*/)){
-  if(!piece)continue;
-  if((cur+piece).length>max&&cur){parts.push(cur);cur=piece}else cur+=piece;
- }
- if(cur)parts.push(cur);
- return parts.length?parts:[text.slice(0,max)];
+async function translateTimed(input:TimedText[],source:string,target:string,_quoteId:string){
+ const engine=await createLocalTranslator(source,target,input.map(cue=>cue.text).join(' '));
+ try{
+  const output:TimedText[]=[];
+  for(const cue of input)output.push({...cue,text:await translateWithGlossary(engine,cue.text,[])});
+  return output;
+ }finally{engine.destroy?.()}
 }
-async function apiTranslate(text:string,source:string,target:string,quoteId:string){
- const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
-}
-async function translateTimed(input:TimedText[],source:string,target:string,quoteId:string){
- const out:TimedText[]=[];let base=0;
- for(const group of chunks(input,24)){
-  const payload=group.map((x,i)=>`${marker(base+i)} ${x.text}`).join("\n");
-  const translated=await apiTranslate(payload,source,target,quoteId);
-  const map=new Map<number,string>();
-  const re=/⟦LX(\d{4})⟧\s*([\s\S]*?)(?=⟦LX\d{4}⟧|$)/g;let m:RegExpExecArray|null;
-  while((m=re.exec(translated)))map.set(Number(m[1]),m[2].trim());
-  if(map.size!==group.length){
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:await apiTranslate(x.text,source,target,quoteId)})}
-  }else{
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:map.get(base+i)||x.text})}
-  }
-  base+=group.length;
- }
- return out;
-}
-async function remoteTranscribe(file:File,quoteId:string){
- const compact=await extractCompactAudio(file);
- const fd=new FormData();fd.set("file",compact);fd.set("quoteId",quoteId);
- const r=await fetch("/api/tools/media/transcribe",{method:"POST",body:fd});const d=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(String(d.error||"TRANSCRIBE_FAILED"));return String(d.text||"");
-}
-async function remoteTts(text:string,target:string,quoteId:string){
- const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
- if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
+
+
+async function remoteTts(text:string,target:string,_quoteId:string){
+ return synthesizeLocal(text,target);
 }
 function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=new Blob([text],{type:mime});return{name,blob:b,mime,size:b.size}}
 
@@ -82,6 +54,7 @@ export default function VideoTranslateWorkbench(){
   await savePaidTaskDraft({id:draftId,toolId:"video-translate",files:persistFiles?files:undefined,state:{source,targets,mode,startedMinutes,fileNames:files.map(f=>f.name),largeBatch:!persistFiles}});
  }
  async function run(quoteId:string){
+  if(mode==="dub"&&targets.some(target=>target!=="en")){setError(lang==="zh"?"本地配音目前支持英语，请选择英语或导出翻译字幕。":"Local dubbing supports English. Choose English or export translated subtitles.");return}
   setBusy(true);setStage("");setError("");setVideos([]);setSubs([]);
   const vo:ToolResultFile[]=[],so:ToolResultFile[]=[];
   try{
@@ -93,10 +66,7 @@ export default function VideoTranslateWorkbench(){
       const local=await transcribeLocal(file,(p,m)=>setStage(`${fi+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
       original=local.segments.map(x=>({start:x.start,end:x.end,text:x.text}));
       if(!original.length&&local.text)original=[{start:0,end:duration,text:local.text}];
-    }catch{
-      const text=await remoteTranscribe(file,quoteId);
-      original=[{start:0,end:duration,text}];
-    }
+    }catch(error){throw error}
     if(!original.length)throw new Error("TRANSCRIPT_EMPTY");
 
     for(let ti=0;ti<targets.length;ti++){
@@ -111,9 +81,7 @@ export default function VideoTranslateWorkbench(){
       let dubbed:Blob|null=null;
       if(mode==="dub"){
        setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在生成 AI 配音…`);
-       const ttsParts=[] as Blob[];
-       for(const part of splitTts(txt)){ttsParts.push(await remoteTts(part,target,quoteId))}
-       dubbed=await concatMp3(ttsParts,p=>setStage(`${fi+1}/${files.length} · 正在合并语音 ${Math.round(p*100)}%`));
+       dubbed=await remoteTts(txt,target,quoteId);
       }
       setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在生成高质量 MP4…`);
       const translatedVideo=await muxTranslatedVideo({video:file,subtitles:srt,language:target,duration,dubbedAudio:dubbed,onProgress:p=>setStage(`${fi+1}/${files.length} · 视频合成 ${Math.round(p*100)}%`)});
@@ -121,7 +89,7 @@ export default function VideoTranslateWorkbench(){
     }
    }
    setVideos(vo);setSubs(so);setStage("全部视频翻译完成");
-  }catch(e){setError(plainText(lang,"fileError"));setStage("");throw e}
+  }catch(e){setError(lang==="zh"?"本地处理未完成。首次使用需下载模型；当前本地配音仅支持英语，不会转用收费服务。": "Local processing did not finish. Download models first. Local dubbing currently supports English only; no paid fallback is used.");setStage("");throw e}
   finally{setBusy(false)}
  }
  return <div className="space-y-5">
@@ -138,20 +106,20 @@ export default function VideoTranslateWorkbench(){
    <label className="text-sm"><ToolUiText text="输出方式" />
     <select value={mode} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
      <option value="subtitle"><ToolUiText text="翻译字幕 + 原音高质量 MP4" /></option>
-     <option value="dub"><ToolUiText text="翻译字幕 + AI 配音高质量 MP4" /></option>
+     <option value="dub" disabled={targets.some(target=>target!=="en")}><ToolUiText text="翻译字幕 + 英语本地配音 MP4" /></option>
     </select>
    </label>
   </div>
 
   <section className="rounded-2xl border border-[var(--lx-line)] p-4">
-   <div className="text-sm font-medium"><ToolUiText text="目标语言" /> <span className="text-xs font-normal text-[var(--lx-faint)]"><ToolUiText text="最多同时 3 种；每增加一种目标语言，按相同视频分钟数增加一次计费数量。" /></span></div>
+   <div className="text-sm font-medium"><ToolUiText text="目标语言" /> <span className="text-xs font-normal text-[var(--lx-faint)]"><ToolUiText text="最多同时 3 种。在设备上处理，不调用收费翻译服务。" /></span></div>
    <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
   </section>
 
   {files.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
    <b>{files.length} <ToolUiText text="个视频 ·" /> {startedMinutes} <ToolUiText text="个起始分钟 ·" /> {targets.length} <ToolUiText text="个目标语言" /></b>
-   <p className="mt-1 text-[var(--lx-muted)]"><ToolUiText text="计费数量：" />{startedMinutes} × {targets.length} = {quantity} <ToolUiText text="分钟单位。人民币 ¥1.50 / 分钟单位；美元 $1.50 / 分钟单位。" /></p>
-   {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
+   <p className="mt-1 text-[var(--lx-muted)]"><ToolUiText text="处理时长：" />{startedMinutes} × {targets.length} = {quantity} <ToolUiText text="分钟。文件在本设备处理。" /></p>
+   {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，处理期间请保持当前页面打开。" /></p>}
   </section>}
 
   {files.length>0&&targets.length>0&&(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"?<FreeMediaActionButton disabled={busy} onRun={()=>run("")}/>: <PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>)}

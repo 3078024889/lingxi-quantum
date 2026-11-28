@@ -1,4 +1,5 @@
 "use client";
+import {createLocalTranslator,translateWithGlossary} from "@/lib/tools/autonomous/translation-local";
 import{useEffect,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -26,30 +27,12 @@ const COPY:Record<LingxiLang,Copy>={
 };
 const LANGS_BY_SOURCE:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
 
-async function translate(text:string,source:string,target:string,quoteId:string){
+async function translate(text:string,source:string,target:string,_quoteId:string){
  if(source===target)return text;
- if(isFreeTranslationAcceptanceTool("image-translator")){
-  const engine=(globalThis as any).Translator;
-  if(engine?.create){
-   const options={sourceLanguage:source,targetLanguage:target};
-   const availability=await engine.availability?.(options);
-   if(availability==="available"){
-    const translator=await engine.create(options);
-    try{return await translator.translate(text)}finally{translator.destroy?.()}
-   }
-  }
-  const response=await fetch("/api/tools/document-translate",{method:"POST",headers:{"content-type":"application/json"},signal:AbortSignal.timeout(190000),body:JSON.stringify({source,target,segments:[{id:"image-line",text}]})});
-  const data=await response.json();
-  if(!response.ok||!data.segments?.[0]?.text)throw Error("TRANSLATE_FAILED");
-  return data.segments[0].text;
- }
- const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
- const d=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));
- const translated=typeof d.translated==="string"?d.translated.trim():"";
- if(!translated)throw new Error("EMPTY_TRANSLATION_RESULT");
- return translated;
+ const translator=await createLocalTranslator(source,target,text);
+ try{return await translateWithGlossary(translator,text,[])}finally{translator.destroy?.()}
 }
+
 function blobOf(c:HTMLCanvasElement){return new Promise<Blob>((resolve,reject)=>c.toBlob(x=>x?resolve(x):reject(new Error("IMAGE_EXPORT_FAILED")),"image/png"))}
 function sample(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number){const pts=[[x-2,y-2],[x+w+2,y-2],[x-2,y+h+2],[x+w+2,y+h+2]].map(([px,py])=>ctx.getImageData(Math.max(0,Math.min(ctx.canvas.width-1,px)),Math.max(0,Math.min(ctx.canvas.height-1,py)),1,1).data);return[0,1,2].map(c=>Math.round(pts.reduce((s,p)=>s+p[c],0)/pts.length))}
 function linesFromBlocks(blocks:any[]){const out:any[]=[];for(const b of blocks||[])for(const p of b.paragraphs||[])for(const l of p.lines||[])if(l?.text?.trim()&&l?.bbox)out.push({text:String(l.text).trim(),bbox:l.bbox});return out}

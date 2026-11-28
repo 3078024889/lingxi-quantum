@@ -1,4 +1,6 @@
 "use client";
+import {createLocalTranslator,translateWithGlossary} from '@/lib/tools/autonomous/translation-local';
+import {synthesizeLocal} from '@/lib/tools/autonomous/speech-local';
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {plainText} from "@/lib/tools/plain-copy";
 import FreeMediaActionButton from "@/components/tools/FreeMediaActionButton";
@@ -10,25 +12,19 @@ import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {subtitleBlocks,rebuildSubtitles} from "@/lib/tools/shared/subtitle-document";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
-import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
+import{muxDubbedVideo}from"@/lib/tools/media/client";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
-async function remoteTranslate(text:string,source:string,target:string,quoteId:string){
- const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
+async function remoteTranslate(text:string,source:string,target:string,_quoteId:string){
+ const engine=await createLocalTranslator(source,target,text);
+ try{return await translateWithGlossary(engine,text,[])}finally{engine.destroy?.()}
 }
-async function remoteTts(text:string,target:string,quoteId:string){
- const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
- if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
+async function remoteTts(text:string,target:string,_quoteId:string){
+ return synthesizeLocal(text,target);
 }
-async function remoteTranscribe(file:File,quoteId:string){
- const compact=await extractCompactAudio(file);
- const fd=new FormData();fd.set("file",compact);fd.set("quoteId",quoteId);
- const r=await fetch("/api/tools/media/transcribe",{method:"POST",body:fd});const d=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(String(d.error||"TRANSCRIBE_FAILED"));return String(d.text||"");
-}
+
 
 export default function VideoDubbingWorkbench(){
  const {lang}=useLingxiLang();
@@ -48,12 +44,7 @@ export default function VideoDubbingWorkbench(){
     try{
      const local=await transcribeLocal(f,(p,m)=>setStage(`${i+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
      text=local.text;srt=toSrt(local.segments);
-    }catch{
-     setStage(`${i+1}/${files.length} · 正在使用兼容识别…`);
-     text=await remoteTranscribe(f,quoteId);
-     const duration=await localMediaDuration(f).catch(()=>60);
-     srt=`1\n00:00:00,000 --> ${new Date(Math.max(1000,duration*1000)).toISOString().slice(11,23).replace(".",",")}\n${text}`;
-    }
+    }catch(error){throw error}
     setStage(`${i+1}/${files.length} · 正在翻译…`);
     const blocks=subtitleBlocks(srt),translations=new Map<number,string>();
     for(const [index,block] of blocks.entries()){
@@ -74,15 +65,16 @@ export default function VideoDubbingWorkbench(){
     videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
    }
    setOutputs(videos);setSubtitles(subs);setStage("处理完成");
-  }catch(e){setError(plainText(lang,"fileError"));setStage("");throw e}
+  }catch(e){setError(lang==="zh"?"本地处理未完成。首次使用需下载模型；当前本地配音仅支持英语，不会转用收费服务。": "Local processing did not finish. Download models first. Local dubbing currently supports English only; no paid fallback is used.");setStage("");throw e}
   finally{setBusy(false)}
  }
 
  return <div className="space-y-4">
   <FileDropzone accept="video/*,audio/*" multiple maxFiles={5} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setSubtitles([]);setError("");setDraftId("")}} disabled={busy} kind="media"/>
+  <p className="text-sm">{lang==="zh"?"语音识别、翻译和配音都在你的设备上完成。首次使用需下载模型；目前本地配音支持英语。":"Speech recognition, translation and dubbing run on your device. Models download on first use; local dubbing currently supports English."}</p>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="原始语言" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
-   <label className="text-sm"><ToolUiText text="配音语言" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
+   <label className="text-sm"><ToolUiText text="配音语言" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v} disabled={v!=="en"}>{n}</option>)}</select></label>
   </div>
   {files.length>0&&(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"?<FreeMediaActionButton disabled={busy} onRun={()=>run("")}/>: <PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}

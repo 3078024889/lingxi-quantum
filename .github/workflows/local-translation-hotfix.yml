@@ -28,7 +28,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
-          node --test tests/local-document-translation.test.mjs tests/subtitle-device-translation.test.mjs tests/video-translation-subtitle-export.test.mjs tests/video-cancel-restart.test.mjs tests/document-translation-free-acceptance.test.mjs tests/cn-payment-activation-20261109.test.mjs
+          node --test tests/local-document-translation.test.mjs tests/subtitle-device-translation.test.mjs tests/video-translation-subtitle-export.test.mjs tests/video-cancel-restart.test.mjs tests/retired-media-api.test.mjs tests/document-translation-free-acceptance.test.mjs tests/cn-payment-activation-20261109.test.mjs
           pnpm exec tsc --noEmit --incremental false
           sudo apt-get update -qq
           sudo apt-get install -y fonts-noto-cjk >/dev/null
@@ -68,6 +68,10 @@ jobs:
           code=$(curl -sS -X POST -o "$RUNNER_TEMP/retired.json" -w '%{http_code}' http://127.0.0.1:3328/api/tools/document-translate)
           test "$code" = 410
           grep -q LOCAL_PROCESSING_REQUIRED "$RUNNER_TEMP/retired.json"
+          for route in translate transcribe tts free-dubbing-preview; do
+            code=$(curl -sS -X POST -o /dev/null -w '%{http_code}' "http://127.0.0.1:3328/api/tools/media/$route")
+            test "$code" = 410
+          done
           for path in / /tools /ai-wallet /tools/pass; do
             curl -fsS "http://127.0.0.1:3328$path" >/dev/null
           done
