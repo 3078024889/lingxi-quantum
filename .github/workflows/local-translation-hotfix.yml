@@ -80,8 +80,14 @@ jobs:
           tar -C .next/standalone -czf local-translation-standalone.tar.gz .
           sha256sum local-translation-standalone.tar.gz > local-translation-standalone.sha256
           sha256sum -c local-translation-standalone.sha256
+          curl -fsSL --retry 2 --max-time 300 \
+            https://github.com/3078024889/lingxi-quantum/releases/download/translation-local-8113409d961c/local-translation-standalone.tar.gz -o "$RUNNER_TEMP/baseline.tar.gz"
+          echo "5a23a65bb904c7f7793627dd9ea05ed8acaede004e190602e4a458317898a625  $RUNNER_TEMP/baseline.tar.gz" | sha256sum -c -
+          python3 scripts/ops/build-release-delta.py "$RUNNER_TEMP/baseline.tar.gz" .next/standalone local-tools-delta.tar.gz \
+            8113409d961c247e1c1d7d506043545db2d0eef6 "$GITHUB_SHA"
+          sha256sum local-tools-delta.tar.gz > local-tools-delta.sha256
           tag="translation-local-${GITHUB_SHA:0:12}"
-          gh release create "$tag" local-translation-standalone.tar.gz local-translation-standalone.sha256 \
+          gh release create "$tag" local-translation-standalone.tar.gz local-translation-standalone.sha256 local-tools-delta.tar.gz local-tools-delta.sha256 scripts/ops/restore-release-delta.py \
             --target "$GITHUB_SHA" --prerelease \
             --title "Local document translation ${GITHUB_SHA:0:12}" \
             --notes 'Exact-source standalone package. Local translation regression checks and loopback smoke passed. Unlimited local acceptance enabled. This package does not deploy ECS or publish a mini program.'
