@@ -19,11 +19,11 @@ function fileMatchesAccept(file:File,accept:string){
   return rules.some(rule=>rule.startsWith(".")?ext===rule:rule.endsWith("/*")?mime.startsWith(rule.slice(0,-1)):mime===rule);
 }
 function fileIdentity(file:File){return`${file.name}\u0000${file.size}\u0000${file.lastModified}`}
-type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean;normalizeDocuments?:boolean};
+type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean;normalizeDocuments?:boolean;authorize?:boolean};
 type Preview={key:string;name:string;url:string};
 
 export default function FileDropzone({
-  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,normalizeDocuments=true,
+  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,normalizeDocuments=true,authorize=true,
 }:Props){
   const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
   const disabled=Boolean(disabledProp||!hydrated);
@@ -66,7 +66,7 @@ export default function FileDropzone({
 
     pendingRef.current=true;
     try{
-      if(TOOL_PASS_ENFORCED){
+      if(TOOL_PASS_ENFORCED&&authorize){
         const toolSlug=toolSlugFromPathname(location.pathname);
         if(!toolSlug)throw new ToolAccessError("INVALID_TOOL_USE");
         if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
@@ -107,7 +107,7 @@ export default function FileDropzone({
       setNormalizing(false);
       setAuthorizing(false);
     }
-  },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
+  },[append,authorize,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
 
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";
 

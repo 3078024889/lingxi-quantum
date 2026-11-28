@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
+import styles from "./ToolsHubV11.module.css";
 import {useEffect,useMemo,useRef,useState}from"react";
+import {coreToolSurface,coreToolIcon} from "@/lib/tools/core-workspaces";
 import ToolGlyph from "./ToolGlyph";
 import {publicToolSurface,type PublicToolSurfaceItem}from"@/lib/tools/public-surface";
 import {useLingxiLang}from"@/lib/lingxi-i18n";
@@ -9,11 +11,12 @@ import {toolCategoryLabel,toolHubCopy,toolCardLine}from"@/lib/tools/hub-copy-v14
 import {TOOL_DISPLAY_CATEGORIES,type ToolDisplayCategory}from"@/lib/tools/display-taxonomy";
 import {searchToolItems}from"@/lib/tools/search-intents-v44r2.mjs";
 import RecentTools from"@/components/tools/RecentTools";
-import {isAnonymousLocalTool,localFreeCopy} from '@/lib/tools/local-free-tools';
+import {localFreeCopy} from '@/lib/tools/local-free-tools';
 
 export default function ToolsHubV11(){
  const{lang,t}=useLingxiLang();
  const[q,setQ]=useState("");
+ const[showAll,setShowAll]=useState(false);
  const searchRef=useRef<HTMLInputElement>(null);
  useEffect(()=>{const shortcut=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();searchRef.current?.focus();}};window.addEventListener("keydown",shortcut);return()=>window.removeEventListener("keydown",shortcut)},[]);
  const[category,setCategory]=useState<ToolDisplayCategory>("all");
@@ -26,16 +29,16 @@ export default function ToolsHubV11(){
  }catch{}},[]);
  const tools=useMemo(()=>publicToolSurface(),[]);
  const list=useMemo<PublicToolSurfaceItem[]>(()=>searchToolItems(
-  freeOnly?tools.filter(isAnonymousLocalTool):tools,q,category,(item:PublicToolSurfaceItem)=>item.category,
+  freeOnly?(showAll||q.trim()?tools:coreToolSurface(tools)).filter(item=>item.localOnly):(showAll||q.trim()?tools:coreToolSurface(tools)),q,category,(item:PublicToolSurfaceItem)=>item.category,
   (item:PublicToolSurfaceItem)=>[
    toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn),
    toolCardLine(lang,item.slug,item.kind,item.descZh,item.descEn),
    toolCategoryLabel(lang,item.category)
   ].filter(Boolean).join(" ")
- ),[tools,q,category,lang,freeOnly]);
+ ),[tools,q,category,lang,freeOnly,showAll]);
 
 
- return <main className="lx11-page lx11-tools-page lx-tools-v124 lx-tools-compact lx26-tools-page"><div className="lx11-wrap">
+ return <main className={`${styles.hub} lx11-page lx11-tools-page lx-tools-v124 lx-tools-compact lx26-tools-page`}><div className="lx11-wrap">
   <section className="lx11-tools-hero lx26-tools-stage">
    <div className="lx26-tools-command">
     <span className="lx26-overline">{toolHubCopy(lang,"kicker")}</span>
@@ -44,29 +47,32 @@ export default function ToolsHubV11(){
     <div className="lx-tools-v124-categories lx26-tools-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
     <div className="lx26-tools-filters">
      <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
-     <Link href="/partners" className="lx26-tools-partner-link">{({zh:"免费嵌入网站",en:"Embed on your site",ja:"サイトに埋め込む",ko:"사이트에 삽입",fr:"Intégrer au site",de:"Auf Website einbetten",es:"Integrar en web",pt:"Incorporar no site",ar:"تضمين في موقعك"} as Record<typeof lang,string>)[lang]}</Link>
-    </div>
-   </div>
-   <aside className="lx26-tools-aside" aria-label="Recent tools and plans">
-    <RecentTools/>
     <Link href="/tools/pass" className="lx26-tools-pass-link">
      <span className="lx26-pass-glyph" aria-hidden="true">◇</span>
      <span><strong>{({zh:"全场 100+ 实用工具包",en:"100+ Tools Pass",ja:"100以上のツールパス",ko:"100+ 도구 이용권",fr:"Pass 100+ outils",de:"100+ Werkzeuge Pass",es:"Pase de 100+ herramientas",pt:"Passe de 100+ ferramentas",ar:"باقة أكثر من 100 أداة"} as Record<typeof lang,string>)[lang]}</strong><small>{({zh:"所有工具，一次畅用",en:"One pass for all tools",ja:"全ツールが対象",ko:"모든 도구 이용 가능",fr:"Tous les outils inclus",de:"Alle Werkzeuge",es:"Todas las herramientas",pt:"Todas as ferramentas",ar:"جميع الأدوات"} as Record<typeof lang,string>)[lang]}</small></span>
      <span className="lx26-tools-pass-arrow" aria-hidden="true">›</span>
     </Link>
+     <Link href="/partners" className="lx26-tools-partner-link">{({zh:"免费嵌入网站",en:"Embed on your site",ja:"サイトに埋め込む",ko:"사이트에 삽입",fr:"Intégrer au site",de:"Auf Website einbetten",es:"Integrar en web",pt:"Incorporar no site",ar:"تضمين في موقعك"} as Record<typeof lang,string>)[lang]}</Link>
+    </div>
+   </div>
+   <aside className="lx26-tools-aside" aria-label="Recent tools and plans">
+    <RecentTools/>
+
    </aside>
   </section>
-  <section className="lx11-tool-group"><div className="lx11-tool-grid lx-tools-v124-grid">
+  <section className="lx11-tool-group">
+   <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">{q.trim()?(lang==='zh'?'搜索结果':'Search results'):showAll?(lang==='zh'?'全部工具':'All tools'):(lang==='zh'?'常用工作区':'Everyday workspaces')}</h2><p className="mt-1 text-sm text-slate-500">{lang==='zh'?'先选要做的事，文件处理完成后还能接着编辑。':'Choose a task. Continue working with your result without uploading again.'}</p></div><button type="button" aria-pressed={showAll} onClick={()=>setShowAll(value=>!value)} className="min-h-11 rounded-full border border-slate-200 bg-white px-5 text-sm font-medium hover:border-violet-300">{showAll?(lang==='zh'?'收起，查看常用入口':'Show everyday workspaces'):(lang==='zh'?'更多工具':'More tools')}</button></div>
+   <div className="lx11-tool-grid lx-tools-v124-grid">
    {list.map(item=>{
     const title=toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn);
     const summary=toolCardLine(lang,item.slug,item.kind,item.descZh,item.descEn);
-    return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card" data-tool-slug={item.slug}>
-     <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} slug={item.slug}/></div>
+    return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card !bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" data-tool-slug={item.slug}>
+     <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} slug={coreToolIcon(item.slug)}/></div>
      <div className="lx11-tool-copy"><div className="lx11-tool-title-row"><h3>{title}</h3></div>
       {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}
       <div className="lx-tools-compact-badges">
        <span className={`lx-tool-kind lx-tool-kind-${item.category}`}>{toolCategoryLabel(lang,item.category)}</span>
-       {isAnonymousLocalTool(item)&&<span className="lx-tool-kind">{access[2]}</span>}
+       {item.localOnly&&<span className="lx-tool-kind">{access[2]}</span>}
       </div>
       <span className="lx-tool-card-arrow" aria-hidden="true">→</span>
      </div>

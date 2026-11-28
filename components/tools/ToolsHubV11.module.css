@@ -1,0 +1,25 @@
+.hub { padding: 0 !important; background: #fff !important; }
+.hub :global(.lx11-wrap) { max-width: none !important; margin: 0 !important; }
+.hub :global(.lx26-tools-stage) { margin: 0 0 20px !important; border-color: #e2e8f0 !important; background: #fff !important; box-shadow: 0 8px 24px #17203306 !important; }
+.hub :global(.lx26-tools-aside) { background: #fff !important; border-color: #e2e8f0 !important; box-shadow: none !important; }
+.hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { display: grid !important; grid-template-columns: repeat(4,minmax(0,1fr)) !important; gap: 14px !important; }
+.hub :global(.lx11-tool-card) { min-width: 0; border-radius: 20px !important; border-color: #e2e8f0 !important; background: #fff !important; }
+.hub :global(.lx11-tool-card):hover { border-color: #c4b5fd !important; }
+.hub :global(.lx11-tool-title-row) h3 { line-height: 1.5; }
+@media(max-width:1200px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: repeat(3,minmax(0,1fr)) !important; } }
+@media(max-width:850px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } }
+@media(max-width:480px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: minmax(0,1fr) !important; } }
+
+/* Keep the directory compact even when the global legacy hub styles load later. */
+.hub.hub.hub :global(.lx26-tools-stage) { display: block !important; padding: 16px 0 12px !important; border: 0 !important; border-bottom: 1px solid #edf0f5 !important; border-radius: 0 !important; box-shadow: none !important; }
+.hub.hub.hub :global(.lx26-tools-command) { max-width: none !important; }
+.hub.hub.hub :global(.lx26-tools-heading) { margin: 12px 0 18px !important; }
+.hub.hub.hub :global(.lx26-tools-filters) { display: flex !important; flex-wrap: wrap !important; gap: 12px !important; margin-top: 14px !important; }
+.hub.hub.hub :global(.lx26-tools-filters)>div { margin-right: auto; width: auto !important; flex: 0 1 auto !important; }
+.hub.hub.hub :global(.lx26-tools-filters) :global(.lx26-tools-pass-link) { margin: 0 !important; padding: 8px 12px !important; border: 1px solid #e2e8f0 !important; border-radius: 14px !important; }
+.hub.hub.hub :global(.lx26-tools-partner-link) { white-space: nowrap !important; }
+.hub.hub.hub :global(.lx26-tools-aside):not(:has(:global(.lx-tools-compact-recent))) { display: none !important; }
+.hub.hub.hub :global(.lx11-tool-title-row) h3 { font-size: 15px !important; }
+@media(max-width:1450px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: repeat(3,minmax(0,1fr)) !important; } }
+@media(max-width:1000px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } }
+@media(max-width:520px) { .hub :global(.lx11-tool-group) :global(.lx11-tool-grid) { grid-template-columns: minmax(0,1fr) !important; } .hub.hub.hub :global(.lx26-tools-filters) :global(.lx26-tools-pass-link) { width: 100%; } }
