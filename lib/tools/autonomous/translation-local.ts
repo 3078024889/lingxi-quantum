@@ -1,6 +1,36 @@
 /** Device-only translation. Model downloads contain no document text. */
 export type LocalTranslationOptions={signal?:AbortSignal;onProgress?:(message:string)=>void};
 type Engine={translate(text:string):Promise<string>;destroy?():void};
+/** Release the UI even when a browser/model promise ignores cancellation. */
+export function awaitLocalOperation<T>(operation:Promise<T>,signal?:AbortSignal,timeoutMs=120_000):Promise<T>{
+ signal?.throwIfAborted();
+ return new Promise((resolve,reject)=>{
+  const done=()=>{clearTimeout(timer);signal?.removeEventListener('abort',abort)};
+  const abort=()=>{done();reject(signal?.reason||new Error('LOCAL_TRANSLATION_CANCELLED'))};
+  const timer=setTimeout(()=>{done();reject(new Error('LOCAL_TRANSLATION_TIMEOUT'))},timeoutMs);
+  signal?.addEventListener('abort',abort,{once:true});
+  operation.then(value=>{done();resolve(value)},error=>{done();reject(error)});
+ });
+}
+
+function guardedEngine(engine:Engine,target:string,options:LocalTranslationOptions):Engine{
+ return {
+  async translate(text){
+   const output:string[]=[];
+   // Keep clauses short for both browser and downloadable models. A nonempty
+   // answer to one long paragraph is not proof that every sentence was translated.
+   for(const part of splitTranslationText(text)){
+    options.signal?.throwIfAborted();
+    if(!part.trim()){output.push(part);continue}
+    const translated=await awaitLocalOperation(engine.translate(part),options.signal);
+    if(!translated?.trim()||translated.includes('\uFFFD'))throw Error('LOCAL_TRANSLATION_INCOMPLETE');
+    output.push(translated);
+   }
+   return output.join(target==='zh'?'':' ');
+  },
+  destroy:()=>engine.destroy?.(),
+ };
+}
 const currencyCodes:Record<string,string>={美元:'USD',人民币:'CNY',元:'CNY',欧元:'EUR',英镑:'GBP',日元:'JPY'};
 export async function translateWithGlossary(engine:Engine,text:string,glossary:{source:string;target:string}[]){
  // Keep explicit monetary units literal: small local models can turn 元 into $.
@@ -79,9 +109,11 @@ async function onnxTranslate(text:string,source:string,target:string,options:Loc
    if(mod.env.backends?.onnx?.wasm)mod.env.backends.onnx.wasm.numThreads=1;
    await cachedModel?.pipe.dispose?.();cachedModel=undefined;
    const pipe=await mod.pipeline('translation',id,{device:'wasm',dtype:'q8',revision:revisions[id],progress_callback:(event:any)=>{
-    if(typeof event.progress==='number')options.onProgress?.(`正在下载语言包 ${Math.round(event.progress)}%`);
+    if(options.signal?.aborted)return;
+    if(typeof event.progress==='number')options.onProgress?.(event.progress>=100?'这部分语言包已下载，正在准备翻译…':`正在下载语言包 ${Math.round(event.progress)}%`);
    }});
    cachedModel={id,pipe};
+   options.onProgress?.('语言包已就绪，正在翻译…');
   }
   const translated:string[]=[];
   for(const piece of splitTranslationText(text)){
@@ -105,14 +137,38 @@ export async function createLocalTranslator(source:string,target:string,sample:s
  const native=(globalThis as unknown as {Translator?:NativeFactory}).Translator;
  if(native?.create){
   options.onProgress?.('正在检查本机语言包…');
-  const config={sourceLanguage:from,targetLanguage:target,signal:options.signal,monitor:(monitor:any)=>monitor.addEventListener('downloadprogress',(event:any)=>{
-   options.onProgress?.(`正在准备本地语言包 ${Math.round((event.loaded||0)*100)}%`);
+  const controller=new AbortController();
+  const abort=()=>controller.abort(options.signal?.reason);
+  options.signal?.addEventListener('abort',abort,{once:true});
+  const config={sourceLanguage:from,targetLanguage:target,signal:controller.signal,monitor:(monitor:any)=>monitor.addEventListener('downloadprogress',(event:any)=>{
+   if(controller.signal.aborted)return;
+   const progress=Math.min(100,Math.round((event.loaded||0)*100));
+   options.onProgress?.(progress>=100?'语言包已下载，正在准备翻译…':`正在准备本地语言包 ${progress}%`);
   })};
   try{
-   if(await native.availability?.(config)!=='unavailable')return await native.create(config);
-  }catch(error){options.signal?.throwIfAborted();if(!models[`${from}:${target}`])throw error}
+   if(await awaitLocalOperation(Promise.resolve(native.availability?.(config)),options.signal,15_000)!=='unavailable'){
+    const pending=native.create(config);
+    // Some implementations resolve after abort. Do not retain that instance.
+    void pending.then(engine=>{if(controller.signal.aborted)engine.destroy?.()},()=>{});
+    const engine=await awaitLocalOperation(pending,options.signal,180_000);
+    options.onProgress?.('语言包已就绪，正在翻译…');
+    const guarded=guardedEngine(engine,target,options);
+    return {...guarded,destroy:()=>{options.signal?.removeEventListener('abort',abort);controller.abort();engine.destroy?.()}};
+   }
+  }catch(error){controller.abort();options.signal?.removeEventListener('abort',abort);options.signal?.throwIfAborted();if(!models[`${from}:${target}`])throw error}
+  options.signal?.removeEventListener('abort',abort);
+  controller.abort();
  }
- return {translate:text=>onnxTranslate(text,from,target,options)};
+ const controller=new AbortController();
+ const abort=()=>controller.abort(options.signal?.reason);
+ options.signal?.addEventListener('abort',abort,{once:true});
+ return {
+  async translate(text){
+   try{return await awaitLocalOperation(onnxTranslate(text,from,target,{...options,signal:controller.signal}),controller.signal,300_000)}
+   catch(error){controller.abort();throw error}
+  },
+  destroy(){options.signal?.removeEventListener('abort',abort);controller.abort()},
+ };
 }
 
 export async function translateTextLocal(text:string,source:string,target:string,options:LocalTranslationOptions={}){

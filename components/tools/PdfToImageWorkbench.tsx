@@ -34,6 +34,7 @@ export default function PdfToImageWorkbench(){
  const{lang}=useLingxiLang(),c=C[lang]||C.en;
  const[file,setFile]=useState<File|null>(null),[pages,setPages]=useState(0),[range,setRange]=useState(""),[format,setFormat]=useState<"jpeg"|"png">("jpeg"),[quality,setQuality]=useState(.9),[scale,setScale]=useState(1.5),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const abort=useRef(false);
+ const upload=useRef<HTMLInputElement>(null);
  const [result,setResult]=useState<ToolResultFile[]>([]);
  const [previewGroup,setPreviewGroup]=useState(0);
  const [thumbs,setThumbs]=useState<Record<number,string>>({});
@@ -86,10 +87,13 @@ export default function PdfToImageWorkbench(){
   }catch(e){const message=e instanceof Error?e.message:"";setError(message==="INVALID_RANGE"?c.invalid:message==="CANCELED"?c.cancelled:c.failed)}finally{pdf?.destroy?.();setBusy(false);setStage("")}
  }
  return <div className="space-y-4">
-  <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void choose(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center">
-   <input type="file" accept={DOCUMENT_INPUT_ACCEPT} disabled={busy} className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)void choose(f)}}/>
-   <b>{busy?documentIntakeText(lang,"busy"):documentIntakeText(lang,"hint")}</b>
-  </label>
+  <div onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void choose(f)}} className="rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center">
+   <input ref={upload} type="file" aria-label={lang==="zh"?"选择文档":"Choose a document"} accept={DOCUMENT_INPUT_ACCEPT} disabled={busy} className="hidden" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void choose(f)}}/>
+   <button type="button" disabled={busy} onClick={()=>upload.current?.click()} className="min-h-[44px] rounded-xl bg-[var(--lx-ink)] px-5 py-3 font-semibold text-[var(--lx-bg)] disabled:opacity-40">
+    {busy?documentIntakeText(lang,"busy"):lang==="zh"?"选择文件，或拖到这里":"Choose a file, or drop it here"}
+   </button>
+   <p className="mt-3 text-sm text-[var(--lx-muted)]">{documentIntakeText(lang,"hint")}</p>
+  </div>
   {file&&<div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm text-[var(--lx-ink)]">{file.name} · {pages}</div>}
   {pages>0&&<section aria-label={lang==="zh"?"选取 PDF 页面":"Choose PDF pages"} className="space-y-3">
    <div className="flex flex-wrap items-center justify-between gap-2">

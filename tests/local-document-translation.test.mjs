@@ -7,7 +7,7 @@ import ts from 'typescript';
 function load(file,globals={}){
  const exports={};
  const code=ts.transpileModule(readFileSync(new URL('../'+file,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
- runInNewContext(code,{exports,AbortController,Blob,Float32Array,DataView,ArrayBuffer,Error,Map,RegExp,...globals,
+ runInNewContext(code,{exports,AbortController,Blob,Float32Array,DataView,ArrayBuffer,Error,Map,RegExp,setTimeout,clearTimeout,...globals,
   require:name=>{throw Error('Unexpected dependency: '+name)},fetch:()=>{throw Error('Document data must never be uploaded')}});
  return exports;
 }
@@ -17,6 +17,31 @@ test('local translation preserves every Unicode character when splitting long in
  assert.equal(chunks.join(''),input);
  assert(chunks.every(chunk=>Array.from(chunk).length<=180));
  assert.throws(()=>splitTranslationText(input,0),/LIMIT_INVALID/);
+});
+
+test('cancellation releases a stalled download without waiting for the browser promise',async()=>{
+ const controller=new AbortController();let nativeSignal;
+ const {createLocalTranslator}=load('lib/tools/autonomous/translation-local.ts',{
+  Translator:{availability:async()=> 'downloadable',create:async options=>{nativeSignal=options.signal;return new Promise(()=>{})}},
+ });
+ const pending=createLocalTranslator('zh','en','测试',{signal:controller.signal});
+ await new Promise(resolve=>setTimeout(resolve,0));
+ controller.abort();
+ await assert.rejects(pending,{name:'AbortError'});
+ assert.equal(nativeSignal.aborted,true);
+});
+
+test('a stalled operation times out and completed native clauses remain separate',async()=>{
+ const calls=[];
+ const {awaitLocalOperation,translateTextLocal}=load('lib/tools/autonomous/translation-local.ts',{
+  Translator:{availability:async()=> 'available',create:async()=>({translate:async text=>{calls.push(text);return '['+text+']'}})},
+ });
+ await assert.rejects(awaitLocalOperation(new Promise(()=>{}),undefined,5),/LOCAL_TRANSLATION_TIMEOUT/);
+ const input='第一句。第二句；第三句。';
+ const result=await translateTextLocal(input,'zh','en');
+ assert.equal(calls.join(''),input);
+ assert.equal(calls.length,3);
+ for(const call of calls)assert(result.includes('['+call+']'));
 });
 test('language download is supported, translation stays on device, cancellation is honored',async()=>{
  let destroyed=false;const requests=[];
