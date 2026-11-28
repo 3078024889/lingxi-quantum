@@ -52,3 +52,13 @@ test('custom terms are literal, longest matches win, and translated text is reta
  assert(result.includes('cplusplus'));assert(result.includes('short'));assert(result.includes('[Use '));
  assert(!result.includes('C++'));
 });
+
+test('explicit currencies and amounts never enter a model that may substitute dollars',async()=>{
+ const {translateWithGlossary}=load('lib/tools/autonomous/translation-local.ts');
+ const inputs=[];
+ const result=await translateWithGlossary({translate:async text=>{inputs.push(text);return text}},'金额10元，费用1,234.50美元，另付20欧元。',[]);
+ assert(result.includes('10 CNY'));
+ assert(result.includes('1,234.50 USD'));
+ assert(result.includes('20 EUR'));
+ assert(!inputs.some(text=>/10元|1,234.50美元|20欧元/.test(text)));
+});
