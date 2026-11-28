@@ -1,4 +1,5 @@
 import type {SeoLocale} from '@/lib/seo/global-seo';
+import {acceptanceNotice} from './commerce/acceptance-copy';
 const COPY={
  zh:['操作教程','常见问题','为什么处理较慢？','大文件和首次使用可能需要更长时间。处理时保持页面打开；可以先用小文件试一下。','怎样保存或发给朋友？','先检查结果，再选择“保存文件”或“发送文件”。若微信转发没有下一步，可先存到“文件”，再到微信聊天中添加文件附件。','什么时候需要付费？','有体验额度的工具可先体验；需付费时会显示本次金额，确认后才继续。已经生成的同一份结果重复保存或发送不会重复计次。','选择要处理的文件，或粘贴文字、链接。','选择本次需要的功能和选项，再开始处理。','检查结果；保留原件，保存或发送需要的文件。'],
  en:['Step-by-step guide','Frequently asked questions','Why is processing slow?','Large files and first use may take longer. Keep the page open; try a small file first.','How can I save or send the result?','Review the result, then choose Save file or Send file. If forwarding to WeChat stalls, save to Files and attach it from inside the WeChat chat.','When is payment required?','Try the included allowance where available. Any charge is shown for confirmation before continuing. Saving or sending the same generated result again does not count twice.','Choose a file, or paste text or a link.','Choose the function and options you need, then start.','Review the result, keep the original, and save or send the files you need.'],
@@ -10,7 +11,10 @@ const COPY={
  pt:['Guia passo a passo','Perguntas frequentes','Por que demora?','Arquivos grandes e o primeiro uso podem demorar. Mantenha a página aberta e teste um arquivo pequeno.','Como salvar ou enviar?','Confira e escolha Salvar ou Enviar. Se o WeChat travar, salve em Arquivos e anexe pela conversa.','Quando é preciso pagar?','Use a cota de teste disponível. O custo é confirmado antes de continuar. Salvar ou enviar o mesmo resultado novamente não conta duas vezes.','Escolha um arquivo ou cole texto ou um link.','Escolha a função e as opções e inicie.','Confira, guarde o original e salve ou envie o resultado.'],
  ar:['دليل الاستخدام','أسئلة شائعة','لماذا تستغرق المعالجة وقتاً؟','الملفات الكبيرة والاستخدام الأول قد يستغرقان وقتاً أطول. أبق الصفحة مفتوحة وجرّب ملفاً صغيراً.','كيف أحفظ النتيجة أو أرسلها؟','راجع النتيجة ثم اختر الحفظ أو الإرسال. إذا توقف WeChat فاحفظ في الملفات ثم أرفق من داخل المحادثة.','متى يلزم الدفع؟','استخدم حصة التجربة المتاحة. يُعرض السعر للتأكيد قبل المتابعة. إعادة حفظ النتيجة نفسها أو إرسالها لا تُحسب مرتين.','اختر ملفاً أو الصق نصاً أو رابطاً.','اختر الوظيفة والإعدادات ثم ابدأ.','راجع النتيجة واحتفظ بالأصل ثم احفظ أو أرسل.'],
 } as const;
-export function tutorialCopy(locale:SeoLocale){return COPY[locale]||COPY.en}
+export function tutorialCopy(locale:SeoLocale,freeAcceptance=false):readonly string[]{
+ const copy=COPY[locale]||COPY.en;
+ return freeAcceptance?copy.map((value,index)=>index===7?acceptanceNotice(locale):value):copy;
+}
 
 
 type GuideGroup = "file"|"pdf"|"pdfEditor"|"pdfSign"|"pdfMerge"|"pdfSplit"|"image"|"audio"|"audioCleanup"|"video"|"text"|"qr"|"ocr"|"privacy"|"translate"|"web";

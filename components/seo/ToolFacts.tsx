@@ -4,13 +4,14 @@ import {toolGeoFact} from "@/lib/seo/site-facts";
 import {getGlobalTool,localePath,SEO_LOCALES,toolTitle,type GlobalTool,type SeoLocale} from "@/lib/seo/global-seo";
 import SearchIntentFaq from "./SearchIntentFaq";
 import {tutorialCopy,toolTutorialSteps} from "@/lib/tools/tutorial-copy";
+import {isFreeLocalAcceptanceTool,isFreeTranslationAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 
 // Public copy stays task-oriented; implementation details remain in source/audit data.
 export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocale}){
  const facts=toolFacts(tool.slug,locale),c=SEO_LOCALES[locale];
  const fact=toolGeoFact(tool.slug,locale);
  const related=facts.related.map(getGlobalTool).filter((x):x is GlobalTool=>Boolean(x));
- const guide=tutorialCopy(locale),steps=toolTutorialSteps(locale,tool.slug);
+ const guide=tutorialCopy(locale,isFreeLocalAcceptanceTool(tool.slug)||isFreeTranslationAcceptanceTool(tool.slug)),steps=toolTutorialSteps(locale,tool.slug);
  return <section lang={c.hreflang} dir={c.dir} aria-label={guide[0]} className="lx-growth-facts">
   <h2 className="lx-growth-section-title">{guide[0]}</h2>
   <p>{facts.summary}</p>

@@ -5,6 +5,8 @@ import {isPublicPaidToolId} from '@/lib/tools/paid-catalog';
 import {allToolBillingPolicies} from '@/lib/pricing/tool-policy-data';
 import {documentUploadDisclosure} from '@/lib/tools/document/upload-disclosure';
 import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
+import {isFreeLocalAcceptanceTool,isFreeTranslationAcceptanceTool} from '@/lib/tools/commerce/free-acceptance';
+import {acceptanceNotice} from '@/lib/tools/commerce/acceptance-copy';
 export type {SeoLocale} from './global-seo';
 
 const LOCALES:SeoLocale[]=['zh','en','ja','ko','fr','de','es','pt','ar'];
@@ -30,6 +32,10 @@ function fact(title:string,description:string,path:string,locale:SeoLocale,kind?
 }
 export function toolGeoFact(slug:string,locale:SeoLocale):GeoFact|null{
  const tool=GLOBAL_TOOL_CATALOG.find(t=>t.slug===slug);if(!tool)return null;
+ if(isFreeLocalAcceptanceTool(slug)||isFreeTranslationAcceptanceTool(slug)){
+  const privacy=['video-toolkit','video-watermark-remover','video-translate','video-dubbing'].includes(slug)?text(ONLINE,locale):text(LOCAL,locale);
+  return fact(toolTitle(locale,tool),[toolDescription(locale,tool),privacy,acceptanceNotice(locale)].join(' '),'/tools/'+slug,locale,'free-local');
+ }
  if(slug==="ai-image-check"||slug==="ai-video-audio-check"){
   const copy={"zh":"免费检测，来源签名与可选 AI 分析在设备内运行；首次使用模型可能需要下载。没有 C2PA 签名不等于 AI 生成，模型得分也不代表真实性概率。","en":"Free, on-device provenance and optional AI-indicator checks. The model may download on first use. Missing C2PA signatures do not imply AI origin, and scores are not authenticity probabilities.","ja":"無料で端末内のC2PA検証と任意AI分析を提供。初回はモデルをダウンロードする場合があります。署名の有無やスコアで真偽は判断できません。","ko":"무료 기기 내 C2PA 확인과 선택적 AI 분석입니다. 최초 사용 시 모델을 받을 수 있습니다. 서명 유무나 점수로 진위를 단정할 수 없습니다.","fr":"Vérification C2PA et analyse IA facultative sur l’appareil, gratuites. Un modèle peut être téléchargé. Absence de signature et scores ne prouvent pas l’origine.","de":"Kostenlose lokale C2PA-Prüfung und optionale KI-Analyse. Ein Modell kann heruntergeladen werden. Fehlende Signaturen und Scores beweisen keine Herkunft.","es":"Verificación C2PA y análisis IA opcional, gratuitos y locales. Puede descargarse un modelo. La falta de firma y los resultados no demuestran el origen.","pt":"Verificação C2PA e análise IA opcional, gratuitas e locais. Pode ser necessário descarregar um modelo. Ausência de assinatura e pontuações não comprovam a origem.","ar":"فحص C2PA وتحليل مؤشرات الذكاء الاصطناعي اختياريًا على الجهاز مجانًا. قد يُنزّل نموذج عند أول استخدام. غياب التوقيع أو الدرجة لا يثبت المصدر."};
   return fact(toolTitle(locale,tool),toolDescription(locale,tool)+" "+copy[locale],"/tools/"+slug,locale,"free-local");
