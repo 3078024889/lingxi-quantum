@@ -1,11 +1,12 @@
 /** Device-only translation. Model downloads contain no document text. */
 export type LocalTranslationOptions={signal?:AbortSignal;onProgress?:(message:string)=>void};
 type Engine={translate(text:string):Promise<string>;destroy?():void};
+const currencyCodes:Record<string,string>={美元:'USD',人民币:'CNY',元:'CNY',欧元:'EUR',英镑:'GBP',日元:'JPY'};
 export async function translateWithGlossary(engine:Engine,text:string,glossary:{source:string;target:string}[]){
  // Keep explicit monetary units literal: small local models can turn 元 into $.
  // ISO codes are unambiguous and do not imply currency conversion.
  const money=Array.from(text.matchAll(/(?:人民币\s*)?([0-9]+(?:,[0-9]{3})*(?:\.[0-9]+)?)\s*(美元|人民币|元|欧元|英镑|日元)/gu),match=>({
-  source:match[0],target:`${match[1]} ${{美元:'USD',人民币:'CNY',元:'CNY',欧元:'EUR',英镑:'GBP',日元:'JPY'}[match[2]]}`,
+  source:match[0],target:`${match[1]} ${currencyCodes[match[2]]}`,
  }));
  const terms=[...money,...glossary.filter(term=>!money.some(amount=>term.source.includes(amount.source)))].filter(term=>term.source&&text.includes(term.source)).sort((a,b)=>b.source.length-a.source.length);
  if(!terms.length)return engine.translate(text);
