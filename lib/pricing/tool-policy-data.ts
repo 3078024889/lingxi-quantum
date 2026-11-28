@@ -3,6 +3,8 @@ import type {BillingClass,ExecutionMode} from "./policy";
 export type ToolBillingPolicy={toolId:string;billingClass:BillingClass;executionMode:ExecutionMode;reason:string};
 
 const POLICY:Record<string,ToolBillingPolicy>={
+  "pdf-workspace":{toolId:"pdf-workspace",billingClass:"PAID_TOOL",executionMode:"local",reason:"one tool workspace; free during acceptance, ToolPass after validation"},
+  "image-workspace":{toolId:"image-workspace",billingClass:"PAID_TOOL",executionMode:"local",reason:"one tool workspace; free during acceptance, ToolPass after validation"},
   "metered-tool-export":{toolId:"metered-tool-export",billingClass:"PAID_TOOL",executionMode:"local",reason:"daily per-tool account and IP trial; excess exports billed one unit per file"},
   "batch-pdf":{toolId:"batch-pdf",billingClass:"PAID_TOOL",executionMode:"local",reason:"unified multi-file PDF workflow billed once per batch"},
   "pdf-ocr":{toolId:"pdf-ocr",billingClass:"PAID_TOOL",executionMode:"local",reason:"free first page preview; full OCR bills additional pages"},

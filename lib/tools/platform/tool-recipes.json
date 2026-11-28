@@ -1,5 +1,35 @@
 [
   {
+    "slug": "image-workspace",
+    "capabilities": [
+      "image.resize",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-workspace",
+    "capabilities": [
+      "document.merge",
+      "document.split",
+      "document.page-rotate",
+      "document.page-select",
+      "document.preview",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "ai-image-check",
     "capabilities": [
       "file.detect",

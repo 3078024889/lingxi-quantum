@@ -8,6 +8,14 @@ import {join} from 'node:path';
 import ts from 'typescript';
 import {PDFDocument,degrees} from 'pdf-lib';
 const require=createRequire(import.meta.url);
+test('every public directory entry has a valid processing recipe',()=>{
+ const catalog=readFileSync(new URL('../lib/seo/global-seo.ts',import.meta.url),'utf8').split('export const GLOBAL_TOOL_CATALOG=[')[1].split('export type GlobalTool=')[0];
+ const slugs=[...catalog.matchAll(/slug:"([a-z0-9-]+)"/g)].map(match=>match[1]);
+ const recipes=JSON.parse(readFileSync(new URL('../lib/tools/platform/tool-recipes.json',import.meta.url),'utf8'));
+ const capabilities=new Set(JSON.parse(readFileSync(new URL('../lib/tools/platform/capability-genome.json',import.meta.url),'utf8')).map(row=>row.id));
+ assert.equal(recipes.length,slugs.length);
+ for(const slug of slugs){const row=recipes.find(item=>item.slug===slug);assert.ok(row,slug);assert.ok(row.capabilities.every(id=>capabilities.has(id)),slug)}
+});
 async function evidence(name,bytes){if(!process.env.TOOL_WORKSPACE_EVIDENCE_DIR)return;await mkdir(process.env.TOOL_WORKSPACE_EVIDENCE_DIR,{recursive:true});await writeFile(join(process.env.TOOL_WORKSPACE_EVIDENCE_DIR,name),bytes)}
 function load(file,globals={},dependencies={}){
  const exports={};
