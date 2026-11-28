@@ -2,7 +2,7 @@ import type{LingxiLang}from"@/lib/lingxi-i18n";
 
 export type ContinuationCopyKey=
  |"title"|"lead"|"busy"|"error"
- |"pdfCompress"|"pdfSplit"|"pdfImages"
+ |"pdfCompress"|"pdfSplit"|"pdfImages"|"pdfWorkspace"|"imageWorkspace"
  |"imageCompress"|"imageResize"|"imagePrivacy"|"imagePdf"
  |"xlsxCsv"|"csvXlsx";
 
@@ -16,6 +16,8 @@ const COPY:Record<ContinuationCopyKey,Row>={
  error:L("暂时无法把结果交给下一个工具，请先保存文件。","Could not pass this result forward. Save the file first.","結果を次のツールへ渡せませんでした。先にファイルを保存してください。","결과를 다음 도구로 전달하지 못했습니다. 먼저 파일을 저장하세요.","Impossible de transmettre ce résultat. Enregistrez d’abord le fichier.","Das Ergebnis konnte nicht weitergegeben werden. Speichere die Datei zuerst.","No se pudo pasar este resultado. Guarda primero el archivo.","Não foi possível passar este resultado. Salve o arquivo primeiro.","تعذر تمرير هذه النتيجة. احفظ الملف أولًا."),
  pdfCompress:L("继续缩小 PDF 体积","Reduce the PDF size","PDFをさらに小さくする","PDF 용량 더 줄이기","Réduire encore le PDF","PDF weiter verkleinern","Reducir el tamaño del PDF","Reduzir o tamanho do PDF","تقليل حجم PDF"),
  pdfSplit:L("继续按页拆分","Split into pages","ページごとに分割","페이지별로 분할","Séparer en pages","In Seiten aufteilen","Dividir en páginas","Dividir em páginas","تقسيم إلى صفحات"),
+ pdfWorkspace:L("继续整理页面","Organize pages","ページを整理","페이지 정리","Organiser les pages","Seiten ordnen","Organizar páginas","Organizar páginas","تنظيم الصفحات"),
+ imageWorkspace:L("继续编辑图片","Edit the image","画像を編集","이미지 편집","Modifier l’image","Bild bearbeiten","Editar imagen","Editar imagem","تعديل الصورة"),
  pdfImages:L("继续导出为图片","Export pages as images","ページを画像にする","페이지를 이미지로 내보내기","Exporter les pages en images","Seiten als Bilder exportieren","Exportar páginas como imágenes","Exportar páginas como imagens","تصدير الصفحات كصور"),
  imageCompress:L("继续压缩图片","Compress the image","画像をさらに圧縮","이미지 더 압축","Compresser l’image","Bild komprimieren","Comprimir la imagen","Comprimir a imagem","ضغط الصورة"),
  imageResize:L("继续修改尺寸","Resize the image","画像サイズを変更","이미지 크기 변경","Redimensionner l’image","Bildgröße ändern","Cambiar el tamaño","Alterar o tamanho","تغيير حجم الصورة"),
