@@ -1,4 +1,5 @@
 import "server-only";
+import {quotaToolSlug} from "../core-workspaces";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {toolPassBackendReady,toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
@@ -35,7 +36,7 @@ export async function authorizeToolPassStage(input:{
  const {data,error}=await createAdminClient().rpc("lingxi_redeem_tool_stage",{
   p_request_id:requestId,
   p_user_id:user.id,
-  p_tool_slug:input.toolSlug,
+  p_tool_slug:quotaToolSlug(input.toolSlug),
   p_operation_id:operationId,
   p_stage:input.stage
  });

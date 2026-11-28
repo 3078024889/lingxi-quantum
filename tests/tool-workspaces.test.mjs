@@ -82,3 +82,22 @@ test('image crop geometry keeps ratios, contains the selected area and rejects o
  assert.throws(()=>workspaceImageSize(10000,10000,{x:0,y:0,w:1,h:1},1),/SIZE_LIMIT/);
  assert.throws(()=>workspaceImageSize(10,10,{x:0,y:0,w:1,h:1},NaN),/SIZE_INVALID/);
 });
+
+test('device cookies are signed, stable, distinct and cannot be forged by editing the ID',()=>{
+ const {newToolDevice,readToolDevice}=load('lib/tools/commerce/tool-device.ts',{process:{env:{LINGXIFIELD_PRIVACY_HASH_SECRET:'fixture-only-secret-32-characters-long'}}});
+ const first=newToolDevice(),second=newToolDevice();assert.notEqual(first,second);
+ assert.match(readToolDevice(first),/^[a-f0-9]{64}$/);assert.equal(readToolDevice(first),readToolDevice(first));
+ assert.notEqual(readToolDevice(first),readToolDevice(second));
+ assert.equal(readToolDevice(first.slice(0,-1)+(first.endsWith('0')?'1':'0')),null);
+ assert.equal(readToolDevice('v1.not-a-uuid.'+'a'.repeat(64)),null);assert.equal(readToolDevice(undefined),null);
+});
+test('cookie initialization retries the same request once and compression aliases share a receipt',async()=>{
+ const core=load('lib/tools/core-workspaces.ts');const calls=[];
+ const {claimToolStart,latestConfirmedToolClaim}=load('lib/tools/commerce/tool-start-client.ts',{
+  process:{env:{NEXT_PUBLIC_TOOL_PASS_ENFORCED:'true'}},
+  fetch:async(_url,options)=>{calls.push(JSON.parse(options.body));return calls.length===1?{status:409,ok:false,json:async()=>({error:'DEVICE_SESSION_READY'})}:{status:200,ok:true,json:async()=>({ok:true,requestId:'same-request'})}},
+ },{'./free-acceptance':{isFreeLocalAcceptanceTool:()=>false,isFreeTranslationAcceptanceTool:()=>false},'../core-workspaces':core});
+ const result=await claimToolStart('compress-image-to-50kb',1,'same-request');
+ assert.equal(result.ok,true);assert.equal(calls.length,2);assert.deepEqual(calls[0],calls[1]);assert.equal(calls[0].toolSlug,'compress-image');
+ assert.equal(latestConfirmedToolClaim('compress-image-to-200kb').requestId,'same-request');
+});

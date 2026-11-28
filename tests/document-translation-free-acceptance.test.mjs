@@ -70,7 +70,7 @@ test('free acceptance allows repeated document and subtitle uploads without allo
     const acceptance=compile('../lib/tools/commerce/free-acceptance.ts',{
       '../advanced-catalog':{ADVANCED_TOOLS:[]},'../registry':{getTool:()=>undefined},
     },env);
-    return compile('../lib/tools/commerce/tool-start-client.ts',{'./free-acceptance':acceptance},env);
+    return compile('../lib/tools/commerce/tool-start-client.ts',{'./free-acceptance':acceptance,'../core-workspaces':{quotaToolSlug:slug=>slug}},env);
   }
   const free=client('true');
   for(const tool of ['document-translate','subtitle-translate','image-translator','video-translate','video-dubbing']){

@@ -1,4 +1,5 @@
 import "server-only";
+import {quotaToolSlug} from "../core-workspaces";
 import {createAdminClient} from "@/lib/supabase/admin";
 
 /** A partial front/back cutover must not fall into legacy, unmetered execution. */
@@ -29,7 +30,7 @@ export async function redeemToolStart(input:{
  if(!UUID.test(requestId)||!UUID.test(input.operationId))
   return {ok:false,error:"TOOL_USE_RECEIPT_REQUIRED"};
  const {data,error}=await createAdminClient().rpc("lingxi_redeem_tool_use",{
-  p_request_id:requestId,p_user_id:input.userId,p_tool_slug:input.toolSlug,p_operation_id:input.operationId
+  p_request_id:requestId,p_user_id:input.userId,p_tool_slug:quotaToolSlug(input.toolSlug),p_operation_id:input.operationId
  });
  if(error)return {ok:false,error:"TOOL_USE_RECEIPT_UNAVAILABLE"};
  if(!data?.ok)return {ok:false,error:String(data?.error||"TOOL_USE_RECEIPT_INVALID")};

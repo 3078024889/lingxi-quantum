@@ -1,5 +1,6 @@
 "use client";
 import {isFreeLocalAcceptanceTool,isFreeTranslationAcceptanceTool} from "./free-acceptance";
+import {quotaToolSlug} from "../core-workspaces";
 type ToolAccessResult={ok:boolean;error?:string;accessKind?:"daily_free"|"pass";alreadyClaimed?:boolean;requestId?:string};
 export const TOOL_PASS_ENFORCED=process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true";
 // Memory-only last confirmed receipt. NEVER persist entitlement across users or
@@ -7,24 +8,24 @@ export const TOOL_PASS_ENFORCED=process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="tr
 const lastClaimBySlug=new Map<string,{requestId:string}>();
 export function latestConfirmedToolClaim(toolSlug:string){
  if(!TOOL_PASS_ENFORCED)return null;
- return lastClaimBySlug.get(toolSlug)||null;
+ return lastClaimBySlug.get(quotaToolSlug(toolSlug))||null;
 }
 export class ToolAccessError extends Error{constructor(public code:string){super(code);this.name="ToolAccessError";}}
 export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.randomUUID()):Promise<ToolAccessResult>{
  if(!TOOL_PASS_ENFORCED||isFreeTranslationAcceptanceTool(toolSlug)||isFreeLocalAcceptanceTool(toolSlug))return {ok:true,requestId};
- const response=await fetch("/api/tools/access",{
-  method:"POST",headers:{"Content-Type":"application/json"},
-  credentials:"same-origin",cache:"no-store",
-  body:JSON.stringify({toolSlug,units,requestId})
- });
- const data=await response.json().catch(()=>({}));
+ const body=JSON.stringify({toolSlug:quotaToolSlug(toolSlug),units,requestId});
+ const send=()=>fetch("/api/tools/access",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",cache:"no-store",body});
+ let response=await send();let data=await response.json().catch(()=>({}));
+ // The first response installs a signed, HttpOnly browser identifier, but does
+ // not consume a free use. Retry the same id only after the cookie is installed.
+ if(response.status===409&&data.error==='DEVICE_SESSION_READY'){response=await send();data=await response.json().catch(()=>({}));}
  if(!response.ok||!data.ok)throw new ToolAccessError(String(data.error||"TOOL_ACCESS_UNAVAILABLE"));
  if(data.ok && data.requestId===requestId || data.ok && !data.requestId)
-   lastClaimBySlug.set(toolSlug,{requestId});
+   lastClaimBySlug.set(quotaToolSlug(toolSlug),{requestId});
  return {...data,requestId};
 }
 export const TOOL_ACCESS_MESSAGES:Record<string,Record<string,string>>={
- zh:{LOGIN_REQUIRED:"请先登录后使用免费次数或购买工具通用包。",DAILY_TOOL_FREE_USED:"今天这项工具的免费体验已用完。开通全场工具包，100+ 实用工具随心用，新工具也包含。",TOOL_PASS_REQUIRED:"批量处理更省事。开通全场工具包，100+ 实用工具一次畅用。",TOOL_ACCESS_UNAVAILABLE:"暂时无法确认使用权限，请稍后再试。"},
+ zh:{LOGIN_REQUIRED:"请先登录后使用免费次数或购买工具通用包。",DAILY_TOOL_FREE_USED:"今天这项工具的免费体验已用完。开通全场工具包，实用工具随心用，新工具也包含。",TOOL_PASS_REQUIRED:"批量处理更省事。开通全场工具包，100+ 实用工具一次畅用。",TOOL_ACCESS_UNAVAILABLE:"暂时无法确认使用权限，请稍后再试。"},
  en:{LOGIN_REQUIRED:"Sign in to use your daily free turn or buy a tools pass.",DAILY_TOOL_FREE_USED:"Today's free use is complete. Unlock 100+ tools with one pass, including new additions.",TOOL_PASS_REQUIRED:"One pass covers batch processing, 100+ practical tools and future additions.",TOOL_ACCESS_UNAVAILABLE:"Access could not be verified. Please try again."},
  ja:{LOGIN_REQUIRED:"ログインしてください。",DAILY_TOOL_FREE_USED:"本日の無料利用は終了しました。",TOOL_PASS_REQUIRED:"一日1ファイル無料です。複数ファイルには共通パスが必要です。",TOOL_ACCESS_UNAVAILABLE:"利用権限を確認できません。"},
  ko:{LOGIN_REQUIRED:"먼저 로그인하세요.",DAILY_TOOL_FREE_USED:"오늘의 무료 이용을 마쳤습니다.",TOOL_PASS_REQUIRED:"하루 한 파일은 무료입니다. 일괄 처리는 이용권이 필요합니다.",TOOL_ACCESS_UNAVAILABLE:"이용 권한을 확인할 수 없습니다."},
