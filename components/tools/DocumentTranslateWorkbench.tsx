@@ -5,8 +5,9 @@ import {useLingxiLang} from '@/lib/lingxi-i18n';
 import FileDropzone from './FileDropzone';
 import ResultPanel from './ResultPanel';
 import {prepareTranslationDocument,type TranslationDocument} from '@/lib/tools/shared/document-translation';
-import {parseTranslatedSegments,TRANSLATION_LANGUAGES} from '@/lib/tools/document-translation-contract';
+import {TRANSLATION_LANGUAGES} from '@/lib/tools/document-translation-contract';
 import type {ToolResultFile} from '@/lib/tools/types';
+import {createLocalTranslator,translateWithGlossary} from '@/lib/tools/autonomous/translation-local';
 const names={zh:'中文',en:'English',ja:'日本語',ko:'한국어',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ar:'العربية'};
 const limitsCopy={zh:'PDF 试用上限 200 页。超长文档请先按章节拆分；暂不支持旧版 DOC / PPT / XLS。',en:'PDF preview limit: 200 pages. Split longer documents by chapter. Legacy DOC / PPT / XLS are not supported.',ja:'PDF試用は200ページまで。長い文書は章ごとに分割してください。旧形式DOC・PPT・XLSは未対応です。',ko:'PDF 시험은 최대 200페이지입니다. 긴 문서는 장별로 나누세요. 구형 DOC / PPT / XLS는 지원하지 않습니다.',fr:'Limite PDF : 200 pages. Divisez les longs documents par chapitre. DOC / PPT / XLS anciens non pris en charge.',de:'PDF-Testlimit: 200 Seiten. Längere Dokumente kapitelweise teilen. Alte DOC- / PPT- / XLS-Formate werden nicht unterstützt.',es:'Límite PDF: 200 páginas. Divide documentos largos por capítulos. No admite DOC / PPT / XLS antiguos.',pt:'Limite PDF: 200 páginas. Divida documentos longos por capítulo. DOC / PPT / XLS antigos não são aceitos.',ar:'حد PDF التجريبي 200 صفحة. قسّم المستندات الطويلة حسب الفصول. صيغ DOC وPPT وXLS القديمة غير مدعومة.'};
 const loginCopy={zh:['请先登录账户，再回到本页重试。文件仍保留在当前页面。','登录账户'],en:['Sign in, then retry here. Your file remains on this page.','Sign in'],ja:['ログインしてからこのページで再試行してください。ファイルはこのページに保持されます。','ログイン'],ko:['로그인 후 이 페이지에서 다시 시도하세요. 파일은 이 페이지에 유지됩니다.','로그인'],fr:['Connectez-vous puis réessayez ici. Votre fichier reste sur cette page.','Se connecter'],de:['Anmelden und hier erneut versuchen. Die Datei bleibt auf dieser Seite.','Anmelden'],es:['Inicia sesión y reintenta aquí. El archivo permanece en esta página.','Iniciar sesión'],pt:['Entre e tente novamente aqui. O arquivo permanece nesta página.','Entrar'],ar:['سجّل الدخول ثم أعد المحاولة هنا. يبقى الملف في هذه الصفحة.','تسجيل الدخول']};
@@ -31,31 +32,28 @@ export default function DocumentTranslateWorkbench(){
  const active=useRef<AbortController|null>(null);
  useEffect(()=>()=>active.current?.abort(),[]);
  async function run(){
-  if(active.current||!files[0])return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setNeedsLogin(false);setResults([]);setStatus(t[10]);let document:TranslationDocument|undefined;
+  if(active.current||!files[0])return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setNeedsLogin(false);setResults([]);setStatus(t[10]);let document:TranslationDocument|undefined;let translator:Awaited<ReturnType<typeof createLocalTranslator>>|undefined;
   try{
    const glossary=glossaryText.split(/\r?\n/).filter(line=>line.trim()).map(line=>{const i=line.indexOf('=');if(i<1)throw Error('GLOSSARY_INVALID');return {source:line.slice(0,i).trim(),target:line.slice(i+1).trim()}});
    if(glossary.length>30||glossary.some(row=>!row.source||!row.target||row.source.length>120||row.target.length>120))throw Error('GLOSSARY_INVALID');
    document=await prepareTranslationDocument(files[0],controller.signal);if(!document.segments.length)throw Error('NO_TEXT');
+   setStatus(lang==='zh'?`已读取 ${document.segments.length} 段文字，正在准备翻译…`:`Read ${document.segments.length} text sections. Preparing translation…`);
+   translator=await createLocalTranslator(source,target,document.segments.slice(0,12).map(x=>x.text).join(' '),{signal:controller.signal,onProgress:setStatus});
    const translated=new Map<string,string>();
    for(let start=0;start<document.segments.length;){
     let end=start,chars=0;while(end<document.segments.length&&end-start<30&&chars+document.segments[end].text.length<=4000){chars+=document.segments[end].text.length;end++}
     const batch=document.segments.slice(start,end);setStatus(`${translated.size} / ${document.segments.length}`);
-    const context={
-     before:Array.from(document.segments[start-1]?.text??'').slice(-600).join(''),
-     after:Array.from(document.segments[end]?.text??'').slice(0,600).join(''),
-    };
-    const response=await fetch('/api/tools/document-translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source,target,glossary,context,segments:batch}),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(190000)])});
-    const data=await response.json().catch(()=>null);
-    if(!response.ok||!data){
-     if(response.status===401)throw Error('AUTH_REQUIRED');
-     if(response.status===429)throw Error('TRANSLATION_RATE_LIMITED');
-     throw Error('TRANSLATION_UNAVAILABLE');
+    for(const item of batch){
+     controller.signal.throwIfAborted();
+     const text=await translateWithGlossary(translator,item.text,glossary);
+     if(!text.trim()||text.includes('\uFFFD'))throw Error('LOCAL_TRANSLATION_INCOMPLETE');
+     translated.set(item.id,text);setStatus(`${translated.size} / ${document.segments.length}`);
     }
-    const checked=parseTranslatedSegments(JSON.stringify(data.segments),batch);checked.forEach(item=>translated.set(item.id,item.text));start=end;
+    start=end;
    }
    setStatus(t[11]);const blob=await document.finish(translated,layout,controller.signal);if(controller.signal.aborted)throw Error('CANCELLED');
    setResults([{name:`${target}-${files[0].name}`,blob,mime:blob.type,size:blob.size}]);setStatus(t[7]);
-  }catch(cause){setStatus('');const auth=cause instanceof Error&&cause.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?loginCopy[lang][0]:cause instanceof Error&&cause.message==='TRANSLATION_RATE_LIMITED'&&lang==='zh'?'翻译请求较多，请稍后重试。原文件未被修改。':controller.signal.aborted?t[8]:cause instanceof Error&&/^PDF_(LAYOUT|ROTATED|SCAN)/.test(cause.message)?t[12]:t[9])}finally{document?.dispose();active.current=null;setBusy(false)}
+  }catch(cause){setStatus('');const auth=cause instanceof Error&&cause.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?loginCopy[lang][0]:cause instanceof Error&&cause.message==='TRANSLATION_RATE_LIMITED'&&lang==='zh'?'翻译请求较多，请稍后重试。原文件未被修改。':controller.signal.aborted?t[8]:cause instanceof Error&&cause.message.startsWith('LOCAL_')?(lang==='zh'?'请明确选择原文语言并重试。本设备尚不能完成所选语言或术语的本地翻译，原文件未修改，也不会转用收费服务。':'Choose a source language and retry. This device cannot complete the selected local language or glossary. Your original is unchanged; no paid service will be used.'):cause instanceof Error&&/^PDF_(LAYOUT|ROTATED|SCAN)/.test(cause.message)?t[12]:t[9])}finally{translator?.destroy?.();document?.dispose();active.current=null;setBusy(false)}
  }
  return <div className="space-y-4" dir={lang==='ar'?'rtl':'ltr'}>
   <FileDropzone accept=".pdf,.docx,.pptx,.xlsx,.odt,.epub,.txt,.md,.srt,.vtt" normalizeDocuments={false} files={files} disabled={busy} maxSizeMB={40} onChange={next=>{setFiles(next);setResults([]);setError('');setStatus('')}}/>
@@ -63,9 +61,7 @@ export default function DocumentTranslateWorkbench(){
   <p className="text-xs text-[var(--lx-muted)]">{limitsCopy[lang]} <Link href="/tools/split-pdf" className="underline">PDF →</Link></p>
   <div className="grid gap-3 sm:grid-cols-2"><label>{t[0]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={source} onChange={e=>setSource(e.target.value)}><option value="auto">{t[1]}</option>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label><label>{t[2]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={target} onChange={e=>setTarget(e.target.value)}>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label></div>
   {files[0]?.name.toLowerCase().endsWith('.pdf')&&<select aria-label="PDF" className="w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={layout} onChange={e=>setLayout(e.target.value as typeof layout)}><option value="bilingual">{t[4]}</option><option value="layout">{t[3]}</option></select>}
-  <p className="text-sm text-[var(--lx-muted)]">{process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"&&(lang==="zh"||lang==="en")
-   ?(lang==="zh"?"现在可以免费反复翻译。文件留在你的设备上，仅将需要翻译的文字发送给翻译服务。":"Translate for free. The file stays on your device; only text is sent to the translation service.")
-   :t[13]}</p>
+  <p className="text-sm text-[var(--lx-muted)]">{lang==='zh'?'在你的设备上翻译，不上传文档或文字。首次使用需下载语言包；请保持页面打开。中英互译可使用下载模型，其余语言取决于设备支持。':'Translated on your device without uploading text. Language packs download on first use. Keep this page open. Downloadable models support Chinese–English; other languages depend on device support.'}</p>
   {files[0]?.name.toLowerCase().endsWith('.pdf')&&<p className="text-xs text-[var(--lx-muted)]">
    {layout==='bilingual'&&lang==='zh'?'扫描件请先识别文字。译文放不下时会自动排到独立的译文页。':layout==='bilingual'&&lang==='en'?'Run OCR on scans first. Text that does not fit the original layout flows onto separate translation pages.':t[12]}{" "}
    <Link className="underline" href="/tools/pdf-ocr">OCR →</Link>

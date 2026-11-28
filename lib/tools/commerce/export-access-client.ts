@@ -1,5 +1,5 @@
 "use client";
-import {isFreeLocalAcceptanceTool} from "./free-acceptance";
+import {isFreeLocalAcceptanceTool,isFreeTranslationAcceptanceTool} from "./free-acceptance";
 import {isMeteredTool,isMeteredOperationTool} from './metered-catalog';
 import {TOOL_PASS_ENFORCED} from './tool-start-client';
 import {toolSlugFromPathname} from './tool-route-slug';
@@ -13,13 +13,13 @@ export function registerExportBundle(blob:Blob,members:Blob[]){states.set(blob,{
 export function restoreExportAccess(blob:Blob,id:string,units=1){states.set(blob,{id,allowed:false,units})}
 export async function ensureToolExportAccess(blob:Blob,name:string,intent:'save'|'share'='save'){
  const toolId=toolSlugFromPathname(location.pathname)||'';
- if(isFreeLocalAcceptanceTool(toolId)||TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId))return;
+ if(isFreeTranslationAcceptanceTool(toolId)||isFreeLocalAcceptanceTool(toolId)||TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId))return;
  return authorizeExport(blob,name,intent,toolId);
 }
 // Synchronous read: native file sharing must be started in a fresh click handler.
 export function isExportAccessGranted(blob:Blob):boolean{
  const toolId=toolSlugFromPathname(location.pathname)||'';
- if(isFreeLocalAcceptanceTool(toolId)||TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId)||!isMeteredTool(toolId))return true;
+ if(isFreeTranslationAcceptanceTool(toolId)||isFreeLocalAcceptanceTool(toolId)||TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId)||!isMeteredTool(toolId))return true;
  const state=states.get(blob);
  return Boolean(state?.allowed&&state.toolId===toolId);
 }
