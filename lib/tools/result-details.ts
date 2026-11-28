@@ -7,6 +7,12 @@ const labels:Record<string,[string,string]>={
  width:['宽度（像素）','Width (pixels)'],height:['高度（像素）','Height (pixels)'],
  content:['识别内容','Recognized content'],textItems:['识别的文字片段','Text sections'],
  structureConfidence:['表格识别参考值','Table recognition confidence'],preset:['保存用途','Output preset'],
+ file:['文件名称','File name'],size:['文件大小（字节）','File size (bytes)'],bytes:['文件大小（字节）','File size (bytes)'],
+ MD5:['MD5 校验值','MD5 checksum'],SHA256:['SHA256 校验值','SHA256 checksum'],
+ fileA:['第一个文件','First file'],fileB:['第二个文件','Second file'],
+ sizeA:['第一个文件大小（字节）','First file size (bytes)'],sizeB:['第二个文件大小（字节）','Second file size (bytes)'],
+ sameSize:['文件大小相同','Same file size'],identical:['文件内容相同','Identical file contents'],
+ sha256A:['第一个文件 SHA256','First file SHA256'],sha256B:['第二个文件 SHA256','Second file SHA256'],
 };
 /** Unknown internal identifiers stay out of the result UI. */
 export function resultDetailLabel(key:string,lang:string):string|null{
